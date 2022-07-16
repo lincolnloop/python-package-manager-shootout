@@ -45,6 +45,7 @@ TOOLS := "$(TOOLS) pdm"
 .PHONY: pdm-tooling
 pdm-tooling:
 	curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python3 -
+	pdm config python.use_venv false
 .PHONY: pdm-import
 pdm-import:
 	cd pdm; pdm import -f requirements ../requirements.txt
