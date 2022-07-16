@@ -124,6 +124,7 @@ pip-tools-lock:
 .PHONY: pip-tools-install
 pip-tools-install:
 	test -f pip-tools/.venv/bin/python || python -m venv pip-tools/.venv
+	test -f pip-tools/.venv/bin/wheel || pip-tools/.venv/bin/python -m pip install -U wheel pip setuptools
 	cd pip-tools; ./.venv/bin/python -m pip install -r requirements.txt
 .PHONY: pip-tools-add-package
 pip-tools-add-package:
