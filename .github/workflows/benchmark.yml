@@ -42,7 +42,7 @@ jobs:
          make poetry-clean-cache
          make poetry-clean-venv
          /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-          make poetry-install
+           make poetry-install
 
       - name: install warm
         run: |
@@ -100,7 +100,7 @@ jobs:
          make pdm-clean-cache
          make pdm-clean-venv
          /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-          make pdm-install
+           make pdm-install
 
       - name: install warm
         run: |
@@ -158,7 +158,7 @@ jobs:
          make pipenv-clean-cache
          make pipenv-clean-venv
          /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-          make pipenv-install
+           make pipenv-install
 
       - name: install warm
         run: |

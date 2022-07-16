@@ -21,7 +21,7 @@ poetry-import:
 	cd poetry; poetry add $$(sed -e 's/#.*//' -e '/^$$/ d' < ../requirements.txt)
 .PHONY: poetry-clean-cache
 poetry-clean-cache: pip-clean
-	cd poetry; poetry cache clear --all --no-interaction pypi
+	cd poetry; poetry cache clear --all --no-interaction .
 .PHONY: poetry-clean-venv
 poetry-clean-venv:
 	cd poetry; poetry env remove python || true

@@ -35,7 +35,7 @@
          make ${TOOL}-clean-cache
          make ${TOOL}-clean-venv
          /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-          make ${TOOL}-install
+           make ${TOOL}-install
 
       - name: install warm
         run: |
