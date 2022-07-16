@@ -13,7 +13,7 @@
       - name: convert to sqlite
         run: |
           for file in *-stats/stats.csv; do
-            sqlite-utils insert stats.db stats stats.csv --csv --detect-types
+            sqlite-utils insert stats.db stats $file --csv --detect-types
           done
       - uses: actions/upload-artifact@v3
         with:
