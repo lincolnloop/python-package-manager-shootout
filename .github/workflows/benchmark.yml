@@ -5,6 +5,7 @@ name: benchmark
 on:
   push:
 jobs:
+
   poetry:
     runs-on: ubuntu-latest
     steps:
@@ -60,9 +61,15 @@ jobs:
           VERSION=$(make poetry-version)
           echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > stats.csv
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
-            echo "poetry,$VERSION,$stat,$(cat timings/$stat.txt)" >> stats.csv
+            echo "poetry,$VERSION,$stat,$(cat timings/$stat.txt | tr -d '%')" >> poetry/stats.csv
           done
           mdtable stats.csv >> $GITHUB_STEP_SUMMARY
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: poetry-stats
+          path: poetry/stats.csv
+
   pdm:
     runs-on: ubuntu-latest
     steps:
@@ -118,9 +125,15 @@ jobs:
           VERSION=$(make pdm-version)
           echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > stats.csv
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
-            echo "pdm,$VERSION,$stat,$(cat timings/$stat.txt)" >> stats.csv
+            echo "pdm,$VERSION,$stat,$(cat timings/$stat.txt | tr -d '%')" >> pdm/stats.csv
           done
           mdtable stats.csv >> $GITHUB_STEP_SUMMARY
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pdm-stats
+          path: pdm/stats.csv
+
   pipenv:
     runs-on: ubuntu-latest
     steps:
@@ -176,9 +189,15 @@ jobs:
           VERSION=$(make pipenv-version)
           echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > stats.csv
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
-            echo "pipenv,$VERSION,$stat,$(cat timings/$stat.txt)" >> stats.csv
+            echo "pipenv,$VERSION,$stat,$(cat timings/$stat.txt | tr -d '%')" >> pipenv/stats.csv
           done
           mdtable stats.csv >> $GITHUB_STEP_SUMMARY
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pipenv-stats
+          path: pipenv/stats.csv
+
   pip-tools:
     runs-on: ubuntu-latest
     steps:
@@ -234,6 +253,19 @@ jobs:
           VERSION=$(make pip-tools-version)
           echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > stats.csv
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
-            echo "pip-tools,$VERSION,$stat,$(cat timings/$stat.txt)" >> stats.csv
+            echo "pip-tools,$VERSION,$stat,$(cat timings/$stat.txt | tr -d '%')" >> pip-tools/stats.csv
           done
           mdtable stats.csv >> $GITHUB_STEP_SUMMARY
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: pip-tools-stats
+          path: pip-tools/stats.csv
+
+  gather:
+    runs-on: ubuntu-latest
+    needs: [poetry,pdm,pipenv,pip-tools]
+    steps:
+      - uses: actions/download-artifact@v3
+      - name: Display structure of downloaded files
+        run: ls -R

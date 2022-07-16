@@ -1,3 +1,4 @@
+
   ${TOOL}:
     runs-on: ubuntu-latest
     steps:
@@ -51,8 +52,15 @@
       - name: stats
         run: |
           VERSION=$(make ${TOOL}-version)
-          echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > stats.csv
+          CSV=${TOOL}/stats.csv
+          echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
-            echo "${TOOL},$VERSION,$stat,$(cat timings/$stat.txt)" >> stats.csv
+            echo "${TOOL},$VERSION,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
-          mdtable stats.csv >> $GITHUB_STEP_SUMMARY
+          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: ${TOOL}-stats
+          path: ${TOOL}/stats.csv
+          retentionDays: 10
