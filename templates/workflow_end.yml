@@ -12,11 +12,12 @@
         run: pip install --disable-pip-version-check sqlite-utils
       - name: convert to sqlite
         run: |
-          for file in *-stats/stats.csv; do
-            sqlite-utils insert stats.db stats $file --csv --detect-types
-          done
+          cat *-stats/stats.csv > stats.csv
+          sqlite-utils insert stats.db stats stats.csv --csv --detect-types
       - uses: actions/upload-artifact@v3
         with:
-          name: stats-db
-          path: stats.db
+          name: stats
+          path: |
+            stats.db
+            stats.csv
           retention-days: 10
