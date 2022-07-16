@@ -4,6 +4,8 @@
 name: benchmark
 on:
   push:
+  schedule:
+    - cron: '50 */6 * * *'
 jobs:
 
   poetry:
