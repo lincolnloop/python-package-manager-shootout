@@ -7,4 +7,4 @@ cat templates/workflow_start.yml
 for t in $(make tools); do
   TOOL=$t envsubst '$TOOL' < templates/workflow_tool.yml
 done
-TOOLS=$(make tools | tr ' ' ',') envsubst '$TOOLS' < templates/workflow_end.yml
+TOOLS=$(make tools | sed 's/ /, /g') envsubst '$TOOLS' < templates/workflow_end.yml

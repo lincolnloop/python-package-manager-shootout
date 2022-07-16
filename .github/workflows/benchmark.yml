@@ -278,7 +278,7 @@ jobs:
 
   gather:
     runs-on: ubuntu-latest
-    needs: [poetry,pdm,pipenv,pip-tools]
+    needs: [poetry, pdm, pipenv, pip-tools]
     steps:
       - uses: actions/download-artifact@v3
       - name: Setup Python
