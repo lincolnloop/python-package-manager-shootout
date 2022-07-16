@@ -59,16 +59,19 @@ jobs:
       - name: stats
         run: |
           VERSION=$(make poetry-version)
-          echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > stats.csv
+          CSV=poetry/stats.csv
+          DATE=$(date -u +%Y-%m-%dT%H:%M)
+          echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
-            echo "poetry,$VERSION,$stat,$(cat timings/$stat.txt | tr -d '%')" >> poetry/stats.csv
+            echo "poetry,$VERSION,$DATE,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
-          mdtable stats.csv >> $GITHUB_STEP_SUMMARY
+          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v3
         with:
           name: poetry-stats
           path: poetry/stats.csv
+          retentionDays: 10
 
   pdm:
     runs-on: ubuntu-latest
@@ -123,16 +126,19 @@ jobs:
       - name: stats
         run: |
           VERSION=$(make pdm-version)
-          echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > stats.csv
+          CSV=pdm/stats.csv
+          DATE=$(date -u +%Y-%m-%dT%H:%M)
+          echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
-            echo "pdm,$VERSION,$stat,$(cat timings/$stat.txt | tr -d '%')" >> pdm/stats.csv
+            echo "pdm,$VERSION,$DATE,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
-          mdtable stats.csv >> $GITHUB_STEP_SUMMARY
+          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v3
         with:
           name: pdm-stats
           path: pdm/stats.csv
+          retentionDays: 10
 
   pipenv:
     runs-on: ubuntu-latest
@@ -187,16 +193,19 @@ jobs:
       - name: stats
         run: |
           VERSION=$(make pipenv-version)
-          echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > stats.csv
+          CSV=pipenv/stats.csv
+          DATE=$(date -u +%Y-%m-%dT%H:%M)
+          echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
-            echo "pipenv,$VERSION,$stat,$(cat timings/$stat.txt | tr -d '%')" >> pipenv/stats.csv
+            echo "pipenv,$VERSION,$DATE,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
-          mdtable stats.csv >> $GITHUB_STEP_SUMMARY
+          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v3
         with:
           name: pipenv-stats
           path: pipenv/stats.csv
+          retentionDays: 10
 
   pip-tools:
     runs-on: ubuntu-latest
@@ -251,21 +260,38 @@ jobs:
       - name: stats
         run: |
           VERSION=$(make pip-tools-version)
-          echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > stats.csv
+          CSV=pip-tools/stats.csv
+          DATE=$(date -u +%Y-%m-%dT%H:%M)
+          echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
-            echo "pip-tools,$VERSION,$stat,$(cat timings/$stat.txt | tr -d '%')" >> pip-tools/stats.csv
+            echo "pip-tools,$VERSION,$DATE,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
-          mdtable stats.csv >> $GITHUB_STEP_SUMMARY
+          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v3
         with:
           name: pip-tools-stats
           path: pip-tools/stats.csv
+          retentionDays: 10
 
   gather:
     runs-on: ubuntu-latest
     needs: [poetry,pdm,pipenv,pip-tools]
     steps:
       - uses: actions/download-artifact@v3
-      - name: Display structure of downloaded files
-        run: ls -R
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: prereqs
+        run: pip install --disable-pip-version-check sqlite-utils
+      - name: convert to sqlite
+        run: |
+          for file in *-stats/stats.csv; do
+            sqlite-utils insert stats.db stats stats.csv --csv --detect-types
+          done
+      - uses: actions/upload-artifact@v3
+        with:
+          name: stats-db
+          path: stats.db
+          retentionDays: 10
