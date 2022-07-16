@@ -3,12 +3,16 @@ requirements.txt:
 	# 2.0.20 is the first version that builds on 3.10
 	sed -i 's/uWSGI==2.0.19.1/uWSGI==2.0.20/' $@
 
+.github/workflows/benchmark.yml: Makefile templates/workflow_preamble.yml templates/workflow_tool.yml
+	./bin/build_workflow.sh > $@
+
 PACKAGE := goodconf
 
 .PHONY: pip-clean
 pip-clean:
 	rm -rf ~/.cache/pip
 
+TOOLS := poetry
 .PHONY: poetry-tooling
 poetry-tooling:
 	curl -sSL https://install.python-poetry.org | python3 -
@@ -36,3 +40,36 @@ poetry-add-package:
 .PHONY: poetry-version
 poetry-version:
 	@poetry --version | awk '{print $$3}'
+
+TOOLS := "$(TOOLS) pdm"
+.PHONY: pdm-tooling
+pdm-tooling:
+	curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python3 -
+.PHONY: pdm-import
+pdm-import:
+	cd pdm; pdm import -f requirements ../requirements.txt
+.PHONY: pdm-clean-cache
+pdm-clean-cache: pip-clean
+	rm -rf ~/.cache/pdm
+.PHONY: pdm-clean-venv
+pdm-clean-venv:
+	rm -rf pdm/__pypackages__
+.PHONY: pdm-clean-lock
+pdm-clean-lock:
+	rm -f pdm/pdm.lock
+.PHONY: pdm-lock
+pdm-lock:
+	cd pdm; pdm lock
+.PHONY: pdm-install
+pdm-install:
+	cd pdm; pdm install
+.PHONY: pdm-add-package
+pdm-add-package:
+	cd pdm; pdm add $(PACKAGE)
+.PHONY: pdm-version
+pdm-version:
+	@pdm --version | awk '{print $$3}'
+
+.PHONY: tools
+tools:
+	@echo $(TOOLS)

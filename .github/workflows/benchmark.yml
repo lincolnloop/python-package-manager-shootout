@@ -15,17 +15,7 @@ jobs:
           python-version: "3.10"
 
       - name: setup
-        run: |
-          set -ex
-          # sentry dependencies
-          wget -qO - https://packages.confluent.io/deb/7.2/archive.key | sudo apt-key add -
-          sudo add-apt-repository "deb https://packages.confluent.io/clients/deb $(lsb_release -cs) main"
-          sudo apt-get update -qq
-          sudo apt-get install -y libxmlsec1-dev librdkafka-dev
-          # benchmark setup
-          pip --disable-pip-version-check --no-cache-dir install mdtable
-          mkdir -p timings
-          make requirements.txt
+        run: ./bin/actions_prereqs.sh
 
       - name: tooling
         run: |
@@ -69,5 +59,63 @@ jobs:
           echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > stats.csv
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
             echo "poetry,$VERSION,$stat,$(cat timings/$stat.txt)" >> stats.csv
+          done
+          mdtable stats.csv >> $GITHUB_STEP_SUMMARY
+  pdm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: setup
+        run: ./bin/actions_prereqs.sh
+
+      - name: tooling
+        run: |
+          /usr/bin/time --output=timings/tooling.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pdm-tooling
+
+      - name: import
+        run: |
+          /usr/bin/time --output=timings/import.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pdm-import
+
+      - name: lock
+        run: |
+          make pdm-clean-cache
+          make pdm-clean-venv
+          make pdm-clean-lock
+          /usr/bin/time --output=timings/lock.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pdm-lock
+
+      - name: install cold
+        run: |
+         make pdm-clean-cache
+         make pdm-clean-venv
+         /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+          make pdm-install
+
+      - name: install warm
+        run: |
+          make pdm-clean-venv
+          /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pdm-install
+
+      - name: add package
+        run: |
+          /usr/bin/time --output=timings/add-package.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pdm-add-package
+
+      - name: stats
+        run: |
+          VERSION=$(make pdm-version)
+          echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > stats.csv
+          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
+            echo "pdm,$VERSION,$stat,$(cat timings/$stat.txt)" >> stats.csv
           done
           mdtable stats.csv >> $GITHUB_STEP_SUMMARY

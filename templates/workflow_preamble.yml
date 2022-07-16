@@ -1,0 +1,5 @@
+---
+name: benchmark
+on:
+  push:
+jobs:
