@@ -19,4 +19,4 @@
         with:
           name: stats-db
           path: stats.db
-          retentionDays: 10
+          retention-days: 10

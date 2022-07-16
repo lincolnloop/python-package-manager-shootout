@@ -64,4 +64,4 @@
         with:
           name: ${TOOL}-stats
           path: ${TOOL}/stats.csv
-          retentionDays: 10
+          retention-days: 10

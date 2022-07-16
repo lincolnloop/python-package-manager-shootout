@@ -71,7 +71,7 @@ jobs:
         with:
           name: poetry-stats
           path: poetry/stats.csv
-          retentionDays: 10
+          retention-days: 10
 
   pdm:
     runs-on: ubuntu-latest
@@ -138,7 +138,7 @@ jobs:
         with:
           name: pdm-stats
           path: pdm/stats.csv
-          retentionDays: 10
+          retention-days: 10
 
   pipenv:
     runs-on: ubuntu-latest
@@ -205,7 +205,7 @@ jobs:
         with:
           name: pipenv-stats
           path: pipenv/stats.csv
-          retentionDays: 10
+          retention-days: 10
 
   pip-tools:
     runs-on: ubuntu-latest
@@ -272,7 +272,7 @@ jobs:
         with:
           name: pip-tools-stats
           path: pip-tools/stats.csv
-          retentionDays: 10
+          retention-days: 10
 
   gather:
     runs-on: ubuntu-latest
@@ -294,4 +294,4 @@ jobs:
         with:
           name: stats-db
           path: stats.db
-          retentionDays: 10
+          retention-days: 10
