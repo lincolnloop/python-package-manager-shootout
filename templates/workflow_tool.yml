@@ -53,9 +53,10 @@
         run: |
           VERSION=$(make ${TOOL}-version)
           CSV=${TOOL}/stats.csv
-          echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
+          DATE=$(date -u +%Y-%m-%dT%H:%M)
+          echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
-            echo "${TOOL},$VERSION,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
+            echo "${TOOL},$VERSION,$DATE,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
           mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
 
