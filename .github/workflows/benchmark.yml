@@ -298,7 +298,7 @@ jobs:
           sqlite-utils insert stats.db stats stats.csv --csv --detect-types
       - uses: actions/upload-artifact@v3
         with:
-          name: stats-db
+          name: stats
           path: |
             stats.db
             stats.csv
