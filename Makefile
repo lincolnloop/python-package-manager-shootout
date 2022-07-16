@@ -71,6 +71,36 @@ pdm-add-package:
 pdm-version:
 	@pdm --version | awk '{print $$3}'
 
+
+TOOLS := "$(TOOLS) pipenv"
+.PHONY: pipenv-tooling
+pipenv-tooling:
+	pip install --user pipenv
+.PHONY: pipenv-import
+pipenv-import:
+	cd pipenv; pipenv install -r ../requirements.txt
+.PHONY: pipenv-clean-cache
+pipenv-clean-cache: pip-clean
+	rm -rf ~/.cache/pipenv
+.PHONY: pipenv-clean-venv
+pipenv-clean-venv:
+	cd pipenv; rm -rf $$(pipenv --venv || echo "./does-not-exist")
+.PHONY: pipenv-clean-lock
+pipenv-clean-lock:
+	rm -f pipenv/Pipfile.lock
+.PHONY: pipenv-lock
+pipenv-lock:
+	cd pipenv; pipenv lock
+.PHONY: pipenv-install
+pipenv-install:
+	cd pipenv; pipenv sync
+.PHONY: pipenv-add-package
+pipenv-add-package:
+	cd pipenv; pipenv install $(PACKAGE)
+.PHONY: pipenv-version
+pipenv-version:
+	@pipenv --version | awk '{print $$3}'
+
 .PHONY: tools
 tools:
 	@echo $(TOOLS)
