@@ -4,5 +4,19 @@
     needs: [${TOOLS}]
     steps:
       - uses: actions/download-artifact@v3
-      - name: Display structure of downloaded files
-        run: ls -R
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: prereqs
+        run: pip install --disable-pip-version-check sqlite-utils
+      - name: convert to sqlite
+        run: |
+          for file in *-stats/stats.csv; do
+            sqlite-utils insert stats.db stats stats.csv --csv --detect-types
+          done
+      - uses: actions/upload-artifact@v3
+        with:
+          name: stats-db
+          path: stats.db
+          retentionDays: 10
