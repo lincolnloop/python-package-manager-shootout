@@ -101,6 +101,37 @@ pipenv-add-package:
 pipenv-version:
 	@pipenv --version | awk '{print $$3}'
 
+
+TOOLS := "$(TOOLS) pip-tools"
+.PHONY: pip-tools-tooling
+pip-tools-tooling:
+	pip install --user pip-tools
+.PHONY: pip-tools-import
+pip-tools-import:
+	cat requirements.txt
+.PHONY: pip-tools-clean-cache
+pip-tools-clean-cache: pip-clean
+	rm -rf ~/.cache/pip-tools
+.PHONY: pip-tools-clean-venv
+pip-tools-clean-venv:
+	rm -rf pip-tools/.venv
+.PHONY: pip-tools-clean-lock
+pip-tools-clean-lock:
+	rm -f pip-tools/requirements.txt
+.PHONY: pip-tools-lock
+pip-tools-lock:
+	pip-compile --generate-hashes --output-file=pip-tools/requirements.txt requirements.txt
+.PHONY: pip-tools-install
+pip-tools-install:
+	test -f pip-tools/.venv/bin/python || python -m venv pip-tools/.venv
+	cd pip-tools; ./.venv/bin/python -m pip install -r requirements.txt
+.PHONY: pip-tools-add-package
+pip-tools-add-package:
+	echo $(PACKAGE) >> requirements.txt
+	$(MAKE) pip-tools-lock pip-tools-install
+.PHONY: pip-tools-version
+pip-tools-version:
+	@pip-compile --version | awk '{print $$3}'
 .PHONY: tools
 tools:
 	@echo $(TOOLS)

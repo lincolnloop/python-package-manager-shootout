@@ -179,3 +179,61 @@ jobs:
             echo "pipenv,$VERSION,$stat,$(cat timings/$stat.txt)" >> stats.csv
           done
           mdtable stats.csv >> $GITHUB_STEP_SUMMARY
+  pip-tools:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: setup
+        run: ./bin/actions_prereqs.sh
+
+      - name: tooling
+        run: |
+          /usr/bin/time --output=timings/tooling.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pip-tools-tooling
+
+      - name: import
+        run: |
+          /usr/bin/time --output=timings/import.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pip-tools-import
+
+      - name: lock
+        run: |
+          make pip-tools-clean-cache
+          make pip-tools-clean-venv
+          make pip-tools-clean-lock
+          /usr/bin/time --output=timings/lock.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pip-tools-lock
+
+      - name: install cold
+        run: |
+         make pip-tools-clean-cache
+         make pip-tools-clean-venv
+         /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+           make pip-tools-install
+
+      - name: install warm
+        run: |
+          make pip-tools-clean-venv
+          /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pip-tools-install
+
+      - name: add package
+        run: |
+          /usr/bin/time --output=timings/add-package.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pip-tools-add-package
+
+      - name: stats
+        run: |
+          VERSION=$(make pip-tools-version)
+          echo "tool,version,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > stats.csv
+          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
+            echo "pip-tools,$VERSION,$stat,$(cat timings/$stat.txt)" >> stats.csv
+          done
+          mdtable stats.csv >> $GITHUB_STEP_SUMMARY
