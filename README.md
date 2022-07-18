@@ -41,4 +41,4 @@ To add a new package manager:
 ## TODO
 
 1. Aggregate results over time and store in a central location such as S3.
-2. Create a website to display the results as graphs.
+2. Automatically update from the aggregated results.

@@ -1,0 +1,16 @@
+{
+  "name": "python-package-manager-shootout-site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel serve index.html",
+    "build": "parcel build index.html"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "chart.js": "^3.8.0",
+    "parcel": "^2.6.2"
+  }
+}
