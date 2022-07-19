@@ -23,9 +23,9 @@ function newShade(hexColor, magnitude) {
 const colors = ["#b3cde3", "#ccebc5", "#decbe4", "#fed9a6", "#ffffcc"];
 const max = Math.ceil(data.max) + 20;
 delete data.max;
-for (g in data) {
-  const ctx = document.getElementById(`${g}-chart`).getContext("2d");
-  options = {
+for (const graph in data) {
+  const ctx = document.getElementById(`${graph}-chart`).getContext("2d");
+  const options = {
     animation: false,
     elements: {
       bar: {
@@ -44,23 +44,23 @@ for (g in data) {
     plugins: { legend: false },
   };
 
-  data[g].datasets[0].backgroundColor = [];
-  data[g].datasets[0].borderColor = [];
-  data[g].datasets[0].data.forEach(function (dataset, i) {
-    data[g].datasets[0].backgroundColor.push(colors[i]);
-    data[g].datasets[0].borderColor.push(newShade(colors[i], -50));
+  data[graph].datasets[0].backgroundColor = [];
+  data[graph].datasets[0].borderColor = [];
+  data[graph].datasets[0].data.forEach(function (dataset, i) {
+    data[graph].datasets[0].backgroundColor.push(colors[i]);
+    data[graph].datasets[0].borderColor.push(newShade(colors[i], -50));
   });
-  if (g === "install") {
-    data[g].datasets[1].backgroundColor = [];
-    data[g].datasets[1].borderColor = [];
-    data[g].datasets[1].data.forEach(function (dataset, i) {
-      data[g].datasets[1].backgroundColor.push(newShade(colors[i], -30));
-      data[g].datasets[1].borderColor.push(newShade(colors[i], -65));
+  if (graph === "install") {
+    data[graph].datasets[1].backgroundColor = [];
+    data[graph].datasets[1].borderColor = [];
+    data[graph].datasets[1].data.forEach(function (dataset, i) {
+      data[graph].datasets[1].backgroundColor.push(newShade(colors[i], -30));
+      data[graph].datasets[1].borderColor.push(newShade(colors[i], -65));
     });
     options.scales.x = {
       ticks: {
         callback: function (value, index, ticks) {
-          return [data[g].labels[index], "cold / warm"];
+          return [data[graph].labels[index], "cold / warm"];
         },
       },
     };
@@ -68,7 +68,7 @@ for (g in data) {
 
   new Chart(ctx, {
     type: "bar",
-    data: data[g],
+    data: data[graph],
     options: options,
   });
 }
