@@ -7,7 +7,7 @@ RECENT_RUNS=$(gh run list --workflow benchmark --json databaseId,event --limit 1
 for id in $RECENT_RUNS; do
     gh run download "$id" --name stats
     cat stats.csv >> tmp.csv
-    rm stats.csv
+    rm -f stats.csv stats.db
 done
 
 # strip extra headers from the stats file
