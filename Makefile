@@ -106,12 +106,10 @@ pip-tools-clean-lock:
 pip-tools-lock:
 	pip-compile --generate-hashes --output-file=pip-tools/requirements.txt requirements.txt
 pip-tools-install:
-	test -f pip-tools/.venv/bin/python || python -m venv --upgrade-deps pip-tools/.venv
-	test -f pip-tools/.venv/bin/wheel || ./pip-tools/.venv/bin/python -m pip install -U wheel
-	cd pip-tools; ./.venv/bin/python -m pip install -r requirements.txt
+	pip-sync pip-tools/requirements.txt
 pip-tools-update:
 	pip-compile --generate-hashes --output-file=pip-tools/requirements.txt requirements.txt
-	cd pip-tools; ./.venv/bin/python -m pip install -r requirements.txt
+	pip-sync pip-tools/requirements.txt
 pip-tools-add-package:
 	echo $(PACKAGE) >> requirements.txt
 	$(MAKE) pip-tools-lock pip-tools-install
