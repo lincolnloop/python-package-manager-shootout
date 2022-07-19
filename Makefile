@@ -44,13 +44,13 @@ TOOLS := "$(TOOLS) pdm"
 .PHONY: pdm-tooling pdm-import pdm-clean-cache pdm-clean-venv pdm-clean-lock pdm-lock pdm-install pdm-add-package pdm-version
 pdm-tooling:
 	curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python3 -
-	pdm config python.use_venv false
 pdm-import:
 	cd pdm; pdm import -f requirements ../requirements.txt
 pdm-clean-cache: pip-clean
 	rm -rf ~/.cache/pdm
 pdm-clean-venv:
 	rm -rf pdm/__pypackages__
+	mkdir -p pdm/__pypackages__
 pdm-clean-lock:
 	rm -f pdm/pdm.lock
 pdm-lock:
