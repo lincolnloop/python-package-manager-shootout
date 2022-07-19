@@ -35,6 +35,8 @@ poetry-lock:
 	cd poetry; poetry lock
 poetry-install:
 	cd poetry; poetry install
+poetry-update:
+	cd poetry; poetry update
 poetry-add-package:
 	cd poetry; poetry add $(PACKAGE)
 poetry-version:
@@ -57,6 +59,8 @@ pdm-lock:
 	cd pdm; pdm lock
 pdm-install:
 	cd pdm; pdm install
+pdm-update:
+	cd pdm; pdm update
 pdm-add-package:
 	cd pdm; pdm add $(PACKAGE)
 pdm-version:
@@ -79,6 +83,8 @@ pipenv-lock:
 	cd pipenv; pipenv lock
 pipenv-install:
 	cd pipenv; pipenv sync
+pipenv-update:
+	cd pipenv; pipenv update
 pipenv-add-package:
 	cd pipenv; pipenv install $(PACKAGE)
 pipenv-version:
@@ -102,6 +108,9 @@ pip-tools-lock:
 pip-tools-install:
 	test -f pip-tools/.venv/bin/python || python -m venv --upgrade-deps pip-tools/.venv
 	test -f pip-tools/.venv/bin/wheel || ./pip-tools/.venv/bin/python -m pip install -U wheel
+	cd pip-tools; ./.venv/bin/python -m pip install -r requirements.txt
+pip-tools-update:
+	pip-compile --generate-hashes --output-file=pip-tools/requirements.txt requirements.txt
 	cd pip-tools; ./.venv/bin/python -m pip install -r requirements.txt
 pip-tools-add-package:
 	echo $(PACKAGE) >> requirements.txt
