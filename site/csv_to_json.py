@@ -54,6 +54,11 @@ def convert_to_chartjs(data: List[dict]):
             graphs["install"]["labels"].append(i["tool"])
     graphs["install"]["datasets"] = [cold, warm]
 
+    # cleanup missing data points (might be waiting for a scheduled run)
+    for graph in list(graphs.keys()):
+        if not graphs[graph]["datasets"]:
+            del graphs[graph]
+
     graphs["max"] = max(*vals)
     return graphs
 
