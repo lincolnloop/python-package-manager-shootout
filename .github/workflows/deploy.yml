@@ -23,9 +23,11 @@ jobs:
         with:
           python-version: "3.10"
       - name: prereqs
-        run: pip install --disable-pip-version-check sqlite-utils
+        run: pip install --disable-pip-version-check sqlite-utils mdtable
       - name: average stats
-        run: ./bin/generate_average_stats.sh
+        run: |
+          ./bin/generate_average_stats.sh
+          mdtable stats.csv >> $GITHUB_STEP_SUMMARY
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup Node
