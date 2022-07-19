@@ -1,14 +1,13 @@
 #!/bin/bash
 set -euf -o pipefail
 
-ARCHIVE_API_URL="https://api.github.com/repos/lincolnloop/python-package-manager-shootout/actions/artifacts"
-ARCHIVE_URLS=$(curl -s "$ARCHIVE_API_URL" | jq -r '.artifacts | map(select(.name == "stats"))[].archive_download_url' | head -n4)
-
+RUN_COUNT=6
+RECENT_RUNS=$(gh run list --workflow benchmark --json databaseId,event --limit 100 --jq 'map(select(.event=="schedule")) | .[].databaseId' | head -n "$RUN_COUNT")
 # concatenate the stats files into a single file
-for url in $ARCHIVE_URLS; do
-    curl -sLo -H "Authorization: token $GITHUB_TOKEN" stats.zip "$url"
-    unzip -o stats.zip
+for id in $RECENT_RUNS; do
+    gh run download "$id" --name stats
     cat stats.csv >> tmp.csv
+    rm stats.csv
 done
 
 # strip extra headers from the stats file
@@ -18,5 +17,12 @@ grep -v "$HEADER" tmp.csv >> full.csv
 
 # average stats by tool/stat
 sqlite-utils memory full.csv \
-  "SELECT tool,stat,AVG(\"elapsed time\") AS \"elapsed time\" FROM full GROUP BY tool,stat" \
+  "SELECT
+    tool,
+    stat,
+    AVG(\"elapsed time\") AS \"elapsed time\",
+    MIN(\"elapsed time\") AS \"elapsed time (min)\",
+    MAX(\"elapsed time\") AS \"elapsed time (max)\"
+  FROM full
+  GROUP BY tool,stat" \
   --csv > stats.csv
