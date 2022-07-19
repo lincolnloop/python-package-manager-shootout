@@ -44,6 +44,11 @@
           /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make ${TOOL}-install
 
+      - name: update
+        run: |
+          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make ${TOOL}-update
+
       - name: add package
         run: |
           /usr/bin/time --output=timings/add-package.txt --format="%e,%S,%U,%P,%M,%I,%O" \
@@ -55,7 +60,7 @@
           CSV=${TOOL}/stats.csv
           TIMESTAMP=$(date +%s)
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
-          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
+          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "${TOOL},$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
           mdtable "$CSV" >> $GITHUB_STEP_SUMMARY

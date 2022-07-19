@@ -17,6 +17,7 @@ def csv_to_dicts(csv_file: str) -> List[dict]:
 
 graphs = {
     "lock": {"labels": [], "datasets": []},
+    "update": {"labels": [], "datasets": []},
     "add-package": {"labels": [], "datasets": []},
 }
 
