@@ -20,7 +20,7 @@ sqlite-utils memory full.csv \
   "SELECT
     tool,
     stat,
-    AVG(\"elapsed time\") AS \"elapsed time\",
+    ROUND(AVG(\"elapsed time\"), 2) AS \"elapsed time\",
     MIN(\"elapsed time\") AS \"elapsed time (min)\",
     MAX(\"elapsed time\") AS \"elapsed time (max)\"
   FROM full
