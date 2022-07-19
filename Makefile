@@ -124,7 +124,8 @@ pip-tools-install:
 	test -f pip-tools/.venv/bin/wheel || ./pip-tools/.venv/bin/python -m pip install -U wheel
 	cd pip-tools; ./.venv/bin/python -m pip install -r requirements.txt
 pip-tools-update:
-	cd pip-tools; pip-compile --generate-hashes --upgrade --output-file=pip-tools/requirements.txt requirements.txt; ./.venv/bin/python -m pip install -r requirements.txt
+	pip-compile --generate-hashes --output-file=pip-tools/requirements.txt requirements.txt
+	cd pip-tools; ./.venv/bin/python -m pip install -r requirements.txt
 pip-tools-add-package:
 	echo $(PACKAGE) >> requirements.txt
 	$(MAKE) pip-tools-lock pip-tools-install

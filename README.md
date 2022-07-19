@@ -22,6 +22,7 @@ The following operations are measured in the benchmark:
 * `lock` - Generating a lockfile for the packages.
 * `install-cold` - Installing the packages with an empty cache.
 * `install-warm` - Installing the packages with a pre-populated cache.
+* `update` - Update the lock file and install updated packages.
 * `add-package` - Installing a new package and updating the lock file.
 
 ## Results
