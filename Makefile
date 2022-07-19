@@ -47,8 +47,7 @@ TOOLS := "$(TOOLS) poetry-pre"
 poetry-pre-tooling:
 	curl -sSL https://install.python-poetry.org | python3 - --pre
 poetry-pre-import: poetry-import
-poetry-pre-clean-cache: pip-clean
-	cd poetry; yes yes | poetry cache clear --all --no-interaction .
+poetry-pre-clean-cache: pip-clean poetry-clean-cache
 poetry-pre-clean-venv: poetry-clean-venv
 poetry-pre-clean-lock: poetry-clean-lock
 poetry-pre-lock: poetry-lock
