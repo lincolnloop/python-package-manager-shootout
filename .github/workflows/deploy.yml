@@ -4,10 +4,11 @@ on:
   push:
     branches:
       - deploy/site
+  # trigger after a scheduled run of the benchmarks
   workflow_run:
     workflows: [benchmark]
-    types:
-      - completed
+    branches: [main]
+    types: [completed]
 jobs:
   deploy:
     runs-on: ubuntu-latest
