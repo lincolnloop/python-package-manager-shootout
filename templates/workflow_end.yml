@@ -2,6 +2,7 @@
   gather:
     runs-on: ubuntu-latest
     needs: [${TOOLS}]
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/download-artifact@v3
       - name: build stats.csv

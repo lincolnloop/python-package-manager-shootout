@@ -70,6 +70,7 @@ jobs:
           mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main'
         with:
           name: poetry-stats
           path: poetry/stats.csv
@@ -137,6 +138,7 @@ jobs:
           mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main'
         with:
           name: pdm-stats
           path: pdm/stats.csv
@@ -204,6 +206,7 @@ jobs:
           mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main'
         with:
           name: pipenv-stats
           path: pipenv/stats.csv
@@ -271,6 +274,7 @@ jobs:
           mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main'
         with:
           name: pip-tools-stats
           path: pip-tools/stats.csv
@@ -279,6 +283,7 @@ jobs:
   gather:
     runs-on: ubuntu-latest
     needs: [poetry, pdm, pipenv, pip-tools]
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/download-artifact@v3
       - name: build stats.csv

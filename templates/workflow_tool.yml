@@ -61,6 +61,7 @@
           mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main'
         with:
           name: ${TOOL}-stats
           path: ${TOOL}/stats.csv
