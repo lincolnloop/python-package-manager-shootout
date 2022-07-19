@@ -55,6 +55,11 @@ jobs:
           /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make poetry-install
 
+      - name: update
+        run: |
+          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make poetry-update
+
       - name: add package
         run: |
           /usr/bin/time --output=timings/add-package.txt --format="%e,%S,%U,%P,%M,%I,%O" \
@@ -66,7 +71,7 @@ jobs:
           CSV=poetry/stats.csv
           TIMESTAMP=$(date +%s)
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
-          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
+          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "poetry,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
           mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
@@ -123,6 +128,11 @@ jobs:
           /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pdm-install
 
+      - name: update
+        run: |
+          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pdm-update
+
       - name: add package
         run: |
           /usr/bin/time --output=timings/add-package.txt --format="%e,%S,%U,%P,%M,%I,%O" \
@@ -134,7 +144,7 @@ jobs:
           CSV=pdm/stats.csv
           TIMESTAMP=$(date +%s)
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
-          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
+          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "pdm,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
           mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
@@ -191,6 +201,11 @@ jobs:
           /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pipenv-install
 
+      - name: update
+        run: |
+          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pipenv-update
+
       - name: add package
         run: |
           /usr/bin/time --output=timings/add-package.txt --format="%e,%S,%U,%P,%M,%I,%O" \
@@ -202,7 +217,7 @@ jobs:
           CSV=pipenv/stats.csv
           TIMESTAMP=$(date +%s)
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
-          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
+          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "pipenv,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
           mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
@@ -259,6 +274,11 @@ jobs:
           /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pip-tools-install
 
+      - name: update
+        run: |
+          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pip-tools-update
+
       - name: add package
         run: |
           /usr/bin/time --output=timings/add-package.txt --format="%e,%S,%U,%P,%M,%I,%O" \
@@ -270,7 +290,7 @@ jobs:
           CSV=pip-tools/stats.csv
           TIMESTAMP=$(date +%s)
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
-          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "add-package"; do
+          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "pip-tools,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
           mdtable "$CSV" >> $GITHUB_STEP_SUMMARY

@@ -22,11 +22,12 @@ The following operations are measured in the benchmark:
 * `lock` - Generating a lockfile for the packages.
 * `install-cold` - Installing the packages with an empty cache.
 * `install-warm` - Installing the packages with a pre-populated cache.
+* `update` - Update the lock file and install updated packages.
 * `add-package` - Installing a new package and updating the lock file.
 
 ## Results
 
-Results can be seen in the summary for each individual [GitHub Action run](https://github.com/lincolnloop/python-package-manager-shootout/actions/workflows/benchmark.yml). An artifact named `stats` is created which contains the results in CSV and SQLite format.
+Results can be seen at https://lincolnloop.github.io/python-package-manager-shootout/ and in the summary for each individual [GitHub Action run](https://github.com/lincolnloop/python-package-manager-shootout/actions/workflows/benchmark.yml). An artifact named `stats` is created which contains the results in CSV and SQLite format.
 
 ## Contributing
 
@@ -38,7 +39,6 @@ To add a new package manager:
 2. Add a directory with the same name as the package manager. Add any required files (e.g. `pyproject.toml`) to the directory *without* the dependencies. If no files are required, add an empty `.gitignore` to the directory.
 3. Run `make github-workflow` to regenerate the workflow file.
 
-## TODO
+## Website
 
-1. Aggregate results over time and store in a central location such as S3.
-2. Automatically update from the aggregated results.
+The website is a static site deployed to GitHub Pages. As part of the deployment it downloads stats from the previous 6 benchmarks (run every 6 hours in GitHub Actions), calculates the average, and rebuilds the website. The code for this is in `site` and `.github/workflows/deploy.yml`. The site will automatically rebuild after the benchmarks run, but it can also be triggered by pushing to the `deploy/site` branch.
