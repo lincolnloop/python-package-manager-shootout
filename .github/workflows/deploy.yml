@@ -1,0 +1,58 @@
+---
+name: deploy
+on:
+  push:
+    branches:
+      - deploy/site
+  workflow_run:
+    workflows: [benchmark]
+    types:
+      - completed
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+      - name: prereqs
+        run: pip install --disable-pip-version-check sqlite-utils
+      - name: average stats
+        run: ./bin/generate_average_stats.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: "16.x"
+      - name: dependencies
+        run: npm ci
+        working-directory: site
+      - name: build site
+        working-directory: site
+        run: |
+          set -ex
+          ./csv_to_json.py ../stats.csv > data.json
+          npm run build
+          tar -cf /tmp/dist.tar -C dist .
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+      - name: push
+        run: |
+          set -ex
+          git config user.name "GitHub Actions"
+          git config user.email "<>"
+          rm -rf ./*
+          tar -xf /tmp/dist.tar
+          git add -A
+          git commit -m "gh pages"
+          git push origin gh-pages
