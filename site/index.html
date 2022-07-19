@@ -8,7 +8,7 @@
         font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
           "Oxygen", "Ubuntu", "Helvetica Neue", Arial, sans-serif;
         font-size: 14px;
-        width: 120ch;
+        max-width: 120ch;
         margin: 10px auto;
         background-color: #fdfdfd;
         color: #333;
@@ -17,6 +17,14 @@
         border: 0;
         border-top: 1px solid #ccc;
         margin: 2em 0;
+      }
+      #footer img {
+        float: left;
+        margin-right: 1em;
+        height: 50px;
+      }
+      #footer > p {
+        display: inline-block;
       }
     </style>
   </head>
@@ -61,6 +69,17 @@
     <div style="max-width: 1024px; max-height: 1024px">
       <canvas id="add-package-chart"></canvas>
     </div>
+    <hr />
+    <section id="footer">
+      <a href="https://lincolnloop.com"
+        ><img src="lincolnloop-logo-full-color.svg" alt="Lincoln Loop Logo"
+      /></a>
+      <p>
+        This site is maintained by
+        <a href="https://lincolnloop.com">Lincoln Loop</a>, a web agency
+        specializing in Python and Django.
+      </p>
+    </section>
     <script type="module" src="./index.js"></script>
   </body>
 </html>
