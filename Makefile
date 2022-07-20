@@ -26,7 +26,7 @@ poetry-tooling:
 poetry-import:
 	cd poetry; poetry add $$(sed -e 's/#.*//' -e '/^$$/ d' < ../requirements.txt)
 poetry-clean-cache: pip-clean
-	cd poetry; poetry cache clear --all --no-interaction .
+	rm -rf ~/.cache/pypoetry
 poetry-clean-venv:
 	cd poetry; poetry env remove python || true
 poetry-clean-lock:
