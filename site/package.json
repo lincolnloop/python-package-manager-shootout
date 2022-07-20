@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "start": "parcel serve index.html",
-    "build": "parcel build --public-url=./ index.html"
+    "build": "parcel build --public-url=./ index.html ogimage.png"
   },
   "author": "",
   "license": "MIT",
