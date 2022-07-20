@@ -19,6 +19,7 @@ graphs = {
     "lock": {"labels": [], "datasets": []},
     "update": {"labels": [], "datasets": []},
     "add-package": {"labels": [], "datasets": []},
+    "tooling": {"labels": [], "datasets": []},
 }
 
 
