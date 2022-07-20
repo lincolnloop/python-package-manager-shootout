@@ -56,15 +56,12 @@ jobs:
           set -ex
           ./csv_to_json.py ../stats.csv > data.json
           npm run build
-          # if ogimage.png is older than two days, regenerate it
-          if [ ! -f ogimage.png ] || [ $(find ogimage.png -mtime +2) ]; then
-              python -m http.server --directory dist &
-              PID=$!
-              sleep 1
-              shot-scraper http://localhost:8000 -s '#install-chart' --width 1200 --height 675 --padding 10 -o ogimage.png
-              kill $PID
-              npm run build
-          fi
+          python -m http.server --directory dist &
+          PID=$!
+          sleep 1
+          shot-scraper http://localhost:8000 -s '#install-chart' --width 1200 --height 675 --padding 10 -o ogimage.png
+          kill $PID
+          npm run build
           tar -cf /tmp/dist.tar -C dist .
       - name: Checkout gh-pages branch
         uses: actions/checkout@v3
