@@ -2,7 +2,8 @@
 set -euf -o pipefail
 
 RUN_COUNT=6
-RECENT_RUNS=$(gh run list --workflow benchmark --json databaseId,event --limit 100 --jq 'map(select(.event=="schedule")) | .[].databaseId' | head -n "$RUN_COUNT")
+RUN_LIST=$(gh run list --workflow benchmark --json databaseId,event --limit 50 --jq 'map(select(.event=="schedule")) | .[].databaseId')
+RECENT_RUNS=$(echo "$RUN_LIST" | head -n "$RUN_COUNT")
 # concatenate the stats files into a single file
 for id in $RECENT_RUNS; do
     echo "Downloading stats from run $id"
