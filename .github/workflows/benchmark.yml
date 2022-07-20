@@ -4,8 +4,8 @@
 name: benchmark
 on:
   push:
-    branches-ignore:
-      - deploy/site
+    branches:
+      - benchmark/*
   schedule:
     - cron: '50 */6 * * *'
 jobs:

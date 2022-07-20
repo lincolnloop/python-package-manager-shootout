@@ -26,7 +26,7 @@ poetry-tooling:
 poetry-import:
 	cd poetry; poetry add $$(sed -e 's/#.*//' -e '/^$$/ d' < ../requirements.txt)
 poetry-clean-cache: pip-clean
-	cd poetry; poetry cache clear --all --no-interaction .
+	rm -rf ~/.cache/pypoetry
 poetry-clean-venv:
 	cd poetry; poetry env remove python || true
 poetry-clean-lock:
@@ -108,10 +108,10 @@ pip-tools-lock:
 pip-tools-install:
 	test -f pip-tools/.venv/bin/python || python -m venv --upgrade-deps pip-tools/.venv
 	test -f pip-tools/.venv/bin/wheel || ./pip-tools/.venv/bin/python -m pip install -U wheel
-	cd pip-tools; ./.venv/bin/python -m pip install -r requirements.txt
+	pip-sync --python-executable=./pip-tools/.venv/bin/python pip-tools/requirements.txt
 pip-tools-update:
 	pip-compile --generate-hashes --output-file=pip-tools/requirements.txt requirements.txt
-	cd pip-tools; ./.venv/bin/python -m pip install -r requirements.txt
+	pip-sync --python-executable=./pip-tools/.venv/bin/python pip-tools/requirements.txt
 pip-tools-add-package:
 	echo $(PACKAGE) >> requirements.txt
 	$(MAKE) pip-tools-lock pip-tools-install
