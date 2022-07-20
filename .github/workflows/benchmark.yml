@@ -70,6 +70,7 @@ jobs:
           VERSION=$(make poetry-version)
           CSV=poetry/stats.csv
           TIMESTAMP=$(date +%s)
+          mkdir -p "poetry"
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "poetry,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
@@ -143,6 +144,7 @@ jobs:
           VERSION=$(make poetry-pre-version)
           CSV=poetry-pre/stats.csv
           TIMESTAMP=$(date +%s)
+          mkdir -p "poetry-pre"
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "poetry-pre,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
@@ -216,6 +218,7 @@ jobs:
           VERSION=$(make pdm-version)
           CSV=pdm/stats.csv
           TIMESTAMP=$(date +%s)
+          mkdir -p "pdm"
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "pdm,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
@@ -289,6 +292,7 @@ jobs:
           VERSION=$(make pipenv-version)
           CSV=pipenv/stats.csv
           TIMESTAMP=$(date +%s)
+          mkdir -p "pipenv"
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "pipenv,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
@@ -362,6 +366,7 @@ jobs:
           VERSION=$(make pip-tools-version)
           CSV=pip-tools/stats.csv
           TIMESTAMP=$(date +%s)
+          mkdir -p "pip-tools"
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "pip-tools,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"

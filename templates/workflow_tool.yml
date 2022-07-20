@@ -59,6 +59,7 @@
           VERSION=$(make ${TOOL}-version)
           CSV=${TOOL}/stats.csv
           TIMESTAMP=$(date +%s)
+          mkdir -p "$TOOL"
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "${TOOL},$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
