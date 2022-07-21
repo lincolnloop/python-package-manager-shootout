@@ -75,5 +75,6 @@ jobs:
           rm -rf ./*
           tar -xf /tmp/dist.tar
           git add -A
-          git commit -m "gh pages"
-          git push origin gh-pages
+          # If there's nothing new, commit will fail expectedly.
+          # This prevents that from also failing the workflow.
+          git commit -m "gh pages" && git push origin gh-pages || echo "Unable to commit/push"
