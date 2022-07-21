@@ -41,4 +41,4 @@ To add a new package manager:
 
 ## Website
 
-The website is a static site deployed to GitHub Pages. As part of the deployment it downloads stats from the previous 6 benchmarks (run every 6 hours in GitHub Actions), calculates the average, and rebuilds the website. The code for this is in `site` and `.github/workflows/deploy.yml`. The site will automatically rebuild after the benchmarks run, but it can also be triggered by pushing to the `deploy/site` branch.
+The website is a static site deployed to GitHub Pages. As part of the deployment it downloads stats from the previous four benchmarks (run every 6 hours in GitHub Actions), calculates the average, and rebuilds the website. The code for this is in `site` and `.github/workflows/deploy.yml`. The site will automatically rebuild after the benchmarks run, but it can also be triggered by pushing to the `deploy/site` branch.
