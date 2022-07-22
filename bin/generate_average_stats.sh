@@ -26,13 +26,13 @@ echo "Calculating average stats across runs"
 sqlite-utils memory full.csv \
   --load-extension "$SCRIPT_DIR/libsqlitefunctions" \
   "SELECT
-    tool,
+    printf(\"%s %s\", tool, version) AS tool,
     stat,
     ROUND(AVG(\"elapsed time\"), 2) AS \"elapsed time\",
     MIN(\"elapsed time\") AS \"elapsed time (min)\",
     MAX(\"elapsed time\") AS \"elapsed time (max)\",
     ROUND(stdev(\"elapsed time\"), 2) AS \"elapsed time (stdev)\"
   FROM full
-  GROUP BY tool,stat" \
+  GROUP BY tool,version,stat" \
   --csv > stats.csv
 echo "Stats saved to stats.csv"
