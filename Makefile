@@ -40,7 +40,7 @@ poetry-update:
 poetry-add-package:
 	cd poetry; poetry add $(PACKAGE)
 poetry-version:
-	@poetry --version | awk '{print $$3}'
+	@poetry --version | awk '{print $$3}' | tr -d ')'
 
 TOOLS := "$(TOOLS) poetry-pre"
 .PHONY: poetry-pre-tooling poetry-pre-import poetry-pre-clean-cache poetry-pre-clean-venv poetry-pre-clean-lock poetry-pre-lock poetry-pre-install poetry-pre-add-package poetry-pre-version
