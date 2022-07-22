@@ -1,5 +1,8 @@
 import data from "./data.json";
 import Chart from "chart.js/auto";
+import annotationPlugin from "chartjs-plugin-annotation";
+
+Chart.register(annotationPlugin);
 
 function newShade(hexColor, magnitude) {
   hexColor = hexColor.replace(`#`, ``);
@@ -34,6 +37,22 @@ const colors = [
   "#ccebc5",
   "#ffed6f",
 ];
+
+// https://github.com/chartjs/chartjs-plugin-annotation/blob/752f7e0e6b83f7e606a87ed63720e014f91dd276/docs/samples/line/datasetBars.md?plain=1#L125-L136
+function indexToMin(index, datasetCount, datasetIndex) {
+  if (datasetCount === 2 && datasetIndex === 1) {
+    return index + 0.04;
+  }
+  return index - 0.36;
+}
+
+function indexToMax(index, datasetCount, datasetIndex) {
+  if (datasetCount === 2 && datasetIndex === 0) {
+    return index - 0.04;
+  }
+  return index + 0.36;
+}
+
 const max = Math.ceil(data.max) + 20;
 delete data.max;
 for (const graph in data) {
@@ -79,6 +98,26 @@ for (const graph in data) {
     };
   }
 
+  // TODO: pass in max/min values to show variation in results
+  options.plugins.annotation = { annotations: {} };
+  for (let idx = 0; idx < data[graph].datasets.length; idx++) {
+    for (let idx2 = 0; idx2 < data[graph].datasets[idx].data.length; idx2++) {
+      const val = Math.floor(Math.random() * 100); // FIXME
+      options.plugins.annotation.annotations[`annotation${idx}-${idx2}`] = {
+        type: "line",
+        borderColor: "#888888",
+        borderWidth: 1.5,
+        borderDash: [6, 6],
+        xMax: indexToMax(idx2, data[graph].datasets.length, idx) - 0.05,
+        xMin: indexToMin(idx2, data[graph].datasets.length, idx) + 0.05,
+        xScaleID: "x",
+        // random number between 0 and 100
+        yMax: val,
+        yMin: val,
+        yScaleID: "y",
+      };
+    }
+  }
   new Chart(ctx, {
     type: "bar",
     data: data[graph],
