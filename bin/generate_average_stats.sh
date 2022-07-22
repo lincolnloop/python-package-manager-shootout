@@ -3,7 +3,7 @@ set -euf -o pipefail
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 
 RUN_COUNT=4
-RUN_LIST=$(gh run list --workflow benchmark --json databaseId,event --limit 50 --jq 'map(select(.event=="schedule")) | .[].databaseId')
+RUN_LIST=$(gh run list --workflow benchmark --json databaseId,event,conclusion --limit 50 --jq 'map(select(.event=="schedule" and .conclusion=="success")) | .[].databaseId')
 RECENT_RUNS=$(echo "$RUN_LIST" | head -n "$RUN_COUNT")
 # concatenate the stats files into a single file
 for id in $RECENT_RUNS; do
