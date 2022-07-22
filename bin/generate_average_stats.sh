@@ -19,6 +19,9 @@ HEADER=$(head -n 1 tmp.csv)
 echo "$HEADER" > full.csv
 grep -v "$HEADER" tmp.csv >> full.csv
 
+# temporarily fix an errant parenthesis in old stats. can be removed in 24h
+sed -i 's/1\.2\.0b3)/1.2.0b3/g' full.csv
+
 echo "Calculating average stats across runs"
 # average stats by tool/stat
 # load-extension is built for linux/amd64, remove if you want to run on Mac
