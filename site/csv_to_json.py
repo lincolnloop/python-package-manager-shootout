@@ -16,10 +16,10 @@ def csv_to_dicts(csv_file: str) -> List[dict]:
 
 
 graphs = {
-    "lock": {"labels": [], "datasets": []},
-    "update": {"labels": [], "datasets": []},
-    "add-package": {"labels": [], "datasets": []},
-    "tooling": {"labels": [], "datasets": []},
+    "lock": {"labels": [], "datasets": [{"data": []}]},
+    "update": {"labels": [], "datasets": [{"data": []}]},
+    "add-package": {"labels": [], "datasets": [{"data": []}]},
+    "tooling": {"labels": [], "datasets": [{"data": []}]},
 }
 
 
@@ -32,13 +32,8 @@ def convert_to_chartjs(data: List[dict]):
             key = i["stat"]
         else:
             continue
-        vals.append(float(i["elapsed time"]))
-        if graphs[key]["datasets"] and graphs[key]["datasets"][-1]:
-            graphs[key]["datasets"][-1]["data"].append(float(i["elapsed time"]))
-        else:
-            graphs[key]["datasets"].append({"data": [float(i["elapsed time"])]})
-        if i["tool"] not in graphs[key]["labels"]:
-            graphs[key]["labels"].append(i["tool"])
+        vals.append(float(i["elapsed time (max)"]))
+        graphs[key]["datasets"][0]["data"].append({"id": i["tool"], "max": i["elapsed time (max)"], "min": i["elapsed time (min)"], "avg": i["elapsed time"]})
 
     # install needs both cold & warm datapoints
     graphs["install"] = {"labels": []}
@@ -46,14 +41,12 @@ def convert_to_chartjs(data: List[dict]):
     cold = {"data": [], "label": "cold"}
     for i in data:
         if i["stat"] == "install-cold":
-            cold["data"].append(float(i["elapsed time"]))
+            cold["data"].append({"id": i["tool"], "max": i["elapsed time (max)"], "min": i["elapsed time (min)"], "avg": i["elapsed time"]})
         elif i["stat"] == "install-warm":
-            warm["data"].append(float(i["elapsed time"]))
+            warm["data"].append({"id": i["tool"], "max": i["elapsed time (max)"], "min": i["elapsed time (min)"], "avg": i["elapsed time"]})
         else:
             continue
-        vals.append(float(i["elapsed time"]))
-        if i["tool"] not in graphs["install"]["labels"]:
-            graphs["install"]["labels"].append(i["tool"])
+        vals.append(float(i["elapsed time (max)"]))
     graphs["install"]["datasets"] = [cold, warm]
 
     # cleanup missing data points (might be waiting for a scheduled run)

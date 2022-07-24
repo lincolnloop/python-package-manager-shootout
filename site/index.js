@@ -53,7 +53,18 @@ function indexToMax(index, datasetCount, datasetIndex) {
   return index + 0.36;
 }
 
-const max = Math.ceil(data.max) + 20;
+function indexToMid(index, datasetCount, datasetIndex) {
+  if (datasetCount === 2) {
+    if (datasetIndex === 0) {
+      return index - 0.2;
+    }
+    return index + 0.2;
+  }
+  return index;
+}
+
+const max = Math.ceil(data.max) + 10;
+const stdevLineColor = "#888888";
 delete data.max;
 for (const graph in data) {
   const ctx = document.getElementById(`${graph}-chart`).getContext("2d");
@@ -63,6 +74,10 @@ for (const graph in data) {
       bar: {
         borderWidth: 1.5,
       },
+    },
+    parsing: {
+      xAxisKey: "id",
+      yAxisKey: "avg",
     },
     responsive: true,
     scales: {
@@ -102,18 +117,45 @@ for (const graph in data) {
   options.plugins.annotation = { annotations: {} };
   for (let idx = 0; idx < data[graph].datasets.length; idx++) {
     for (let idx2 = 0; idx2 < data[graph].datasets[idx].data.length; idx2++) {
-      const val = Math.floor(Math.random() * 100); // FIXME
-      options.plugins.annotation.annotations[`annotation${idx}-${idx2}`] = {
+      options.plugins.annotation.annotations[`annotations-min-${idx}-${idx2}`] =
+        {
+          type: "line",
+          borderColor: stdevLineColor,
+          borderWidth: 1.5,
+          xMax: indexToMax(idx2, data[graph].datasets.length, idx) - 0.25,
+          xMin: indexToMin(idx2, data[graph].datasets.length, idx) + 0.25,
+          xScaleID: "x",
+          // random number between 0 and 100
+          yMax: data[graph].datasets[idx].data[idx2].min,
+          yMin: data[graph].datasets[idx].data[idx2].min,
+          yScaleID: "y",
+        };
+      options.plugins.annotation.annotations[`annotations-max-${idx}-${idx2}`] =
+        {
+          type: "line",
+          borderColor: stdevLineColor,
+          borderWidth: 1.5,
+          xMax: indexToMax(idx2, data[graph].datasets.length, idx) - 0.25,
+          xMin: indexToMin(idx2, data[graph].datasets.length, idx) + 0.25,
+          xScaleID: "x",
+          // random number between 0 and 100
+          yMax: data[graph].datasets[idx].data[idx2].max,
+          yMin: data[graph].datasets[idx].data[idx2].max,
+          yScaleID: "y",
+        };
+      const midLine = indexToMid(idx2, data[graph].datasets.length, idx);
+      options.plugins.annotation.annotations[
+        `annotations-vert-${idx}-${idx2}`
+      ] = {
         type: "line",
-        borderColor: "#888888",
+        borderColor: stdevLineColor,
         borderWidth: 1.5,
-        borderDash: [6, 6],
-        xMax: indexToMax(idx2, data[graph].datasets.length, idx) - 0.05,
-        xMin: indexToMin(idx2, data[graph].datasets.length, idx) + 0.05,
+        xMax: midLine,
+        xMin: midLine,
         xScaleID: "x",
         // random number between 0 and 100
-        yMax: val,
-        yMin: val,
+        yMax: data[graph].datasets[idx].data[idx2].max,
+        yMin: data[graph].datasets[idx].data[idx2].min,
         yScaleID: "y",
       };
     }
