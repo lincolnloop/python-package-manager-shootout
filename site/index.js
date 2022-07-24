@@ -88,7 +88,20 @@ for (const graph in data) {
         title: { text: "seconds", display: true },
       },
     },
-    plugins: { legend: false },
+    plugins: {
+      legend: false,
+      tooltip: {
+        callbacks: {
+          label: function (context) {
+            return [
+              `avg: ${context.raw.avg}`,
+              `max: ${context.raw.max}`,
+              `min: ${context.raw.min}`,
+            ];
+          },
+        },
+      },
+    },
   };
 
   data[graph].datasets[0].backgroundColor = [];
