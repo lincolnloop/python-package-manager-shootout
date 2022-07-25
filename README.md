@@ -13,6 +13,8 @@ The list of packages comes from [Sentry's `requirements.txt file`](https://githu
 
 Additional package managers are welcome (see _Contributing_ below). At a minimum, they should be able to generate a lock file for the dependency set and download/install the dependencies locally.
 
+For more background, see https://lincolnloop.com/blog/python-package-manager-shootout/.
+
 ## Operations
 
 The following operations are measured in the benchmark:
