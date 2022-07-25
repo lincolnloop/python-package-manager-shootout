@@ -2,9 +2,7 @@ SHELL=/bin/bash -eu -o pipefail
 
 
 requirements.txt:
-	curl -sLo $@ https://raw.githubusercontent.com/getsentry/sentry/3ca31eee26246450d20501764993fc89eb9547ff/requirements-base.txt
-	# 2.0.20 is the first version that builds on 3.10
-	sed -i 's/uWSGI==2.0.19.1/uWSGI==2.0.20/' $@
+	curl -sLo $@ https://raw.githubusercontent.com/getsentry/sentry/a7057707ee086d9a587e1ea0ab08039a4d7566b5/requirements-base.txt
 
 .github/workflows/benchmark.yml: Makefile bin/build_workflow.sh templates/workflow_start.yml templates/workflow_tool.yml templates/workflow_end.yml
 	./bin/build_workflow.sh > $@
