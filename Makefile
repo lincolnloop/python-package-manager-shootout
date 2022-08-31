@@ -42,20 +42,6 @@ poetry-add-package:
 poetry-version:
 	@poetry --version | awk '{print $$3}' | tr -d ')'
 
-TOOLS := "$(TOOLS) poetry-pre"
-.PHONY: poetry-pre-tooling poetry-pre-import poetry-pre-clean-cache poetry-pre-clean-venv poetry-pre-clean-lock poetry-pre-lock poetry-pre-install poetry-pre-add-package poetry-pre-version
-poetry-pre-tooling:
-	curl -sSL https://install.python-poetry.org | python3 - --pre
-poetry-pre-import: poetry-import
-poetry-pre-clean-cache: pip-clean poetry-clean-cache
-poetry-pre-clean-venv: poetry-clean-venv
-poetry-pre-clean-lock: poetry-clean-lock
-poetry-pre-lock: poetry-lock
-poetry-pre-install: poetry-install
-poetry-pre-update: poetry-update
-poetry-pre-add-package: poetry-add-package
-poetry-pre-version: poetry-version
-
 TOOLS := "$(TOOLS) pdm"
 .PHONY: pdm-tooling pdm-import pdm-clean-cache pdm-clean-venv pdm-clean-lock pdm-lock pdm-install pdm-add-package pdm-version
 pdm-tooling:

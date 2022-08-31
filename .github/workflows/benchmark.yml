@@ -84,80 +84,6 @@ jobs:
           path: poetry/stats.csv
           retention-days: 10
 
-  poetry-pre:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Python
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.10"
-
-      - name: setup
-        run: ./bin/actions_prereqs.sh
-
-      - name: tooling
-        run: |
-          /usr/bin/time --output=timings/tooling.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-            make poetry-pre-tooling
-
-      - name: import
-        run: |
-          /usr/bin/time --output=timings/import.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-            make poetry-pre-import
-
-      - name: lock
-        run: |
-          make poetry-pre-clean-cache
-          make poetry-pre-clean-venv
-          make poetry-pre-clean-lock
-          /usr/bin/time --output=timings/lock.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-            make poetry-pre-lock
-
-      - name: install cold
-        run: |
-         make poetry-pre-clean-cache
-         make poetry-pre-clean-venv
-         /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-           make poetry-pre-install
-
-      - name: install warm
-        run: |
-          make poetry-pre-clean-venv
-          /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-            make poetry-pre-install
-
-      - name: update
-        run: |
-          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-            make poetry-pre-update
-
-      - name: add package
-        run: |
-          /usr/bin/time --output=timings/add-package.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-            make poetry-pre-add-package
-
-      - name: stats
-        run: |
-          VERSION=$(make poetry-pre-version)
-          CSV=poetry-pre/stats.csv
-          TIMESTAMP=$(date +%s)
-          mkdir -p "poetry-pre"
-          echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
-          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
-            echo "poetry-pre,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
-          done
-          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
-
-      - uses: actions/upload-artifact@v3
-        if: github.ref == 'refs/heads/main'
-        with:
-          name: poetry-pre-stats
-          path: poetry-pre/stats.csv
-          retention-days: 10
-
   pdm:
     runs-on: ubuntu-latest
     steps:
@@ -382,7 +308,7 @@ jobs:
 
   gather:
     runs-on: ubuntu-latest
-    needs: [poetry, poetry-pre, pdm, pipenv, pip-tools]
+    needs: [poetry, pdm, pipenv, pip-tools]
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/download-artifact@v3
