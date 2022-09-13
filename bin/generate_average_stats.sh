@@ -25,14 +25,17 @@ echo "Calculating average stats across runs"
 # built from https://kedeligdata.blogspot.com/2010/09/sqlite-with-stdev-standard-deviation.html
 sqlite-utils memory full.csv \
   --load-extension "$SCRIPT_DIR/libsqlitefunctions" \
-  "SELECT
-    printf(\"%s %s\", tool, version) AS tool,
-    stat,
-    ROUND(AVG(\"elapsed time\"), 2) AS \"elapsed time\",
-    MIN(\"elapsed time\") AS \"elapsed time (min)\",
-    MAX(\"elapsed time\") AS \"elapsed time (max)\",
-    ROUND(stdev(\"elapsed time\"), 2) AS \"elapsed time (stdev)\"
-  FROM full
-  GROUP BY tool,version,stat" \
+  "SELECT *
+   FROM (SELECT
+       printf(\"%s %s\", tool, version) AS tool,
+       stat,
+       ROUND(AVG(\"elapsed time\"), 2) AS \"elapsed time\",
+       MIN(\"elapsed time\") AS \"elapsed time (min)\",
+       MAX(\"elapsed time\") AS \"elapsed time (max)\",
+       ROUND(stdev(\"elapsed time\"), 2) AS \"elapsed time (stdev)\",
+       COUNT(*) AS num_entries
+     FROM full
+     GROUP BY tool,version,stat)
+   WHERE num_entries > 2" \
   --csv > stats.csv
 echo "Stats saved to stats.csv"
