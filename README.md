@@ -9,7 +9,7 @@ The list of packages comes from [Sentry's `requirements.txt file`](https://githu
 * [`pdm`](https://pdm.fming.dev/latest/)
 * [`pip-tools`](https://pip-tools.readthedocs.io/) + [`venv`](https://docs.python.org/3/library/venv.html)
 * [`pipenv`](https://pipenv.pypa.io/)
-* [`poetry`](https://python-poetry.org/) (the current `--pre` release is also tested)
+* [`poetry`](https://python-poetry.org/)
 
 Additional package managers are welcome (see _Contributing_ below). At a minimum, they should be able to generate a lock file for the dependency set and download/install the dependencies locally.
 
