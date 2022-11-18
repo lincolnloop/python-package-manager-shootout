@@ -36,6 +36,6 @@ sqlite-utils memory full.csv \
        COUNT(*) AS num_entries
      FROM full
      GROUP BY tool,version,stat)
-   WHERE num_entries > 2" \
+   WHERE num_entries > 1" \
   --csv > stats.csv
 echo "Stats saved to stats.csv"
