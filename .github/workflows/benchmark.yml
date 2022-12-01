@@ -11,7 +11,7 @@ on:
 jobs:
 
   poetry:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -85,7 +85,7 @@ jobs:
           retention-days: 10
 
   pdm:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -159,7 +159,7 @@ jobs:
           retention-days: 10
 
   pipenv:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -233,7 +233,7 @@ jobs:
           retention-days: 10
 
   pip-tools:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
