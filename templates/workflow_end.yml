@@ -1,6 +1,6 @@
 
   gather:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [${TOOLS}]
     if: github.ref == 'refs/heads/main'
     steps:
