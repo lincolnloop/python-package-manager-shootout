@@ -2,7 +2,7 @@
 
 Benchmarking the performance of different Python package managers via GitHub Actions.
 
-The list of packages comes from [Sentry's `requirements.txt file`](https://github.com/getsentry/sentry/blob/a7057707ee086d9a587e1ea0ab08039a4d7566b5/requirements-base.txt) which was chosen arbitrarily as a non-trivial real-world example.
+The list of packages comes from [Sentry's `requirements.txt file`](https://github.com/getsentry/sentry/blob/f1e1642d46ee4ee3a74cbce961a3e47406a68f0b/requirements-base.txt) which was chosen arbitrarily as a non-trivial real-world example.
 
 ## Package Managers
 

@@ -2,9 +2,9 @@ SHELL=/bin/bash -eu -o pipefail
 
 
 requirements.txt:
-	curl -sLo $@ https://raw.githubusercontent.com/getsentry/sentry/a7057707ee086d9a587e1ea0ab08039a4d7566b5/requirements-base.txt
+	curl -sL $@ https://raw.githubusercontent.com/getsentry/sentry/f1e1642d46ee4ee3a74cbce961a3e47406a68f0b/requirements-base.txt | grep -v -- --index-url > $@
 	# fix bad version string
-	sed -i 's/uWSGI==2.0.20.0/uWSGI==2.0.20/' $@
+	sed -i 's/pyuwsgi==2.0.20.0/pyuwsgi==2.0.20/' $@
 
 .github/workflows/benchmark.yml: Makefile bin/build_workflow.sh templates/workflow_start.yml templates/workflow_tool.yml templates/workflow_end.yml
 	./bin/build_workflow.sh > $@
