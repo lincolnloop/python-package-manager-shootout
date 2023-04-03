@@ -104,13 +104,13 @@ pip-tools-clean-venv:
 pip-tools-clean-lock:
 	rm -f pip-tools/requirements.txt
 pip-tools-lock:
-	pip-compile --generate-hashes --output-file=pip-tools/requirements.txt requirements.txt
+	pip-compile --generate-hashes --resolver=backtracking --output-file=pip-tools/requirements.txt requirements.txt
 pip-tools-install:
 	test -f pip-tools/.venv/bin/python || python -m venv --upgrade-deps pip-tools/.venv
 	test -f pip-tools/.venv/bin/wheel || ./pip-tools/.venv/bin/python -m pip install -U wheel
 	pip-sync --python-executable=./pip-tools/.venv/bin/python pip-tools/requirements.txt
 pip-tools-update:
-	pip-compile --generate-hashes --output-file=pip-tools/requirements.txt requirements.txt
+	pip-compile --generate-hashes --resolver=backtracking --output-file=pip-tools/requirements.txt requirements.txt
 	pip-sync --python-executable=./pip-tools/.venv/bin/python pip-tools/requirements.txt
 pip-tools-add-package:
 	echo $(PACKAGE) >> requirements.txt
