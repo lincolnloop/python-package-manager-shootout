@@ -9,6 +9,11 @@
         uses: actions/setup-python@v3
         with:
           python-version: "3.10"
+        if: "'${TOOL}' != 'rye'"
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        if: "'${TOOL}' == 'rye'"
 
       - name: setup
         run: ./bin/actions_prereqs.sh
@@ -17,6 +22,10 @@
         run: |
           /usr/bin/time --output=timings/tooling.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make ${TOOL}-tooling
+
+      - name: Setup Python (rye)
+        run: rye fetch 3.10
+        if: "'${TOOL}' == 'rye'"
 
       - name: import
         run: |

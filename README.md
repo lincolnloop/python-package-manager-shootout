@@ -10,6 +10,7 @@ The list of packages comes from [Sentry's `requirements.txt file`](https://githu
 * [`pip-tools`](https://pip-tools.readthedocs.io/) + [`venv`](https://docs.python.org/3/library/venv.html)
 * [`pipenv`](https://pipenv.pypa.io/)
 * [`poetry`](https://python-poetry.org/)
+* [`rye`](https://github.com/mitsuhiko/rye)
 
 Additional package managers are welcome (see _Contributing_ below). At a minimum, they should be able to generate a lock file for the dependency set and download/install the dependencies locally.
 

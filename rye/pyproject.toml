@@ -1,0 +1,18 @@
+[project]
+name = "rye"
+version = "0.1.0"
+description = "Add a short description here"
+authors = [
+    { name = "User Example", email = "user@example.com" }
+]
+dependencies = []
+readme = "README.md"
+requires-python = ">= 3.10"
+license = { text = "MIT" }
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.rye]
+managed = true

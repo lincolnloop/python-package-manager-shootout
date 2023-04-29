@@ -118,6 +118,28 @@ pip-tools-add-package:
 pip-tools-version:
 	@pip-compile --version | awk '{print $$3}'
 
+
+TOOLS := "$(TOOLS) rye"
+.PHONY: rye-tooling rye-import rye-clean-cache rye-clean-venv rye-clean-lock rye-lock rye-install rye-add-package rye-version
+rye-tooling:
+	cargo install --git https://github.com/mitsuhiko/rye rye
+rye-import:
+	cd rye; rye add $$(sed -e 's/#.*//' -e '/^$$/ d' < ../requirements.txt)
+rye-clean-cache: pip-clean
+rye-clean-venv:
+	cd rye; rm -rf .venv
+rye-clean-lock:
+	rm -f rye/requirements.lock
+rye-lock:
+	cd rye; rye lock
+rye-install:
+	cd rye; rye sync
+rye-update: rye-clean-lock rye-lock
+rye-add-package:
+	cd rye; rye add $(PACKAGE)
+rye-version:
+	@rye --version 2>&1 | grep commit | cut -d' ' -f3-
+
 .PHONY: tools
 tools:
 	@echo $(TOOLS)

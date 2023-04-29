@@ -20,6 +20,11 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: "3.10"
+        if: "'poetry' != 'rye'"
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        if: "'poetry' == 'rye'"
 
       - name: setup
         run: ./bin/actions_prereqs.sh
@@ -28,6 +33,10 @@ jobs:
         run: |
           /usr/bin/time --output=timings/tooling.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make poetry-tooling
+
+      - name: Setup Python (rye)
+        run: rye fetch 3.10
+        if: "'poetry' == 'rye'"
 
       - name: import
         run: |
@@ -94,6 +103,11 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: "3.10"
+        if: "'pdm' != 'rye'"
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        if: "'pdm' == 'rye'"
 
       - name: setup
         run: ./bin/actions_prereqs.sh
@@ -102,6 +116,10 @@ jobs:
         run: |
           /usr/bin/time --output=timings/tooling.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pdm-tooling
+
+      - name: Setup Python (rye)
+        run: rye fetch 3.10
+        if: "'pdm' == 'rye'"
 
       - name: import
         run: |
@@ -168,6 +186,11 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: "3.10"
+        if: "'pipenv' != 'rye'"
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        if: "'pipenv' == 'rye'"
 
       - name: setup
         run: ./bin/actions_prereqs.sh
@@ -176,6 +199,10 @@ jobs:
         run: |
           /usr/bin/time --output=timings/tooling.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pipenv-tooling
+
+      - name: Setup Python (rye)
+        run: rye fetch 3.10
+        if: "'pipenv' == 'rye'"
 
       - name: import
         run: |
@@ -242,6 +269,11 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: "3.10"
+        if: "'pip-tools' != 'rye'"
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        if: "'pip-tools' == 'rye'"
 
       - name: setup
         run: ./bin/actions_prereqs.sh
@@ -250,6 +282,10 @@ jobs:
         run: |
           /usr/bin/time --output=timings/tooling.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pip-tools-tooling
+
+      - name: Setup Python (rye)
+        run: rye fetch 3.10
+        if: "'pip-tools' == 'rye'"
 
       - name: import
         run: |
@@ -306,9 +342,92 @@ jobs:
           path: pip-tools/stats.csv
           retention-days: 10
 
+  rye:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+        if: "'rye' != 'rye'"
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        if: "'rye' == 'rye'"
+
+      - name: setup
+        run: ./bin/actions_prereqs.sh
+
+      - name: tooling
+        run: |
+          /usr/bin/time --output=timings/tooling.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make rye-tooling
+
+      - name: Setup Python (rye)
+        run: rye fetch 3.10
+        if: "'rye' == 'rye'"
+
+      - name: import
+        run: |
+          /usr/bin/time --output=timings/import.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make rye-import
+
+      - name: lock
+        run: |
+          make rye-clean-cache
+          make rye-clean-venv
+          make rye-clean-lock
+          /usr/bin/time --output=timings/lock.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make rye-lock
+
+      - name: install cold
+        run: |
+         make rye-clean-cache
+         make rye-clean-venv
+         /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+           make rye-install
+
+      - name: install warm
+        run: |
+          make rye-clean-venv
+          /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make rye-install
+
+      - name: update
+        run: |
+          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make rye-update
+
+      - name: add package
+        run: |
+          /usr/bin/time --output=timings/add-package.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make rye-add-package
+
+      - name: stats
+        run: |
+          VERSION=$(make rye-version)
+          CSV=rye/stats.csv
+          TIMESTAMP=$(date +%s)
+          mkdir -p "rye"
+          echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
+          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
+            echo "rye,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
+          done
+          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
+
+      - uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          name: rye-stats
+          path: rye/stats.csv
+          retention-days: 10
+
   gather:
     runs-on: ubuntu-22.04
-    needs: [poetry, pdm, pipenv, pip-tools]
+    needs: [poetry, pdm, pipenv, pip-tools, rye]
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/download-artifact@v3
