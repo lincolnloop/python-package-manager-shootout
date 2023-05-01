@@ -134,7 +134,8 @@ rye-lock:
 	cd rye; rye lock
 rye-install:
 	cd rye; rye sync
-rye-update: rye-clean-lock rye-lock
+rye-update:
+	cd rye; rye lock --update-all
 rye-add-package:
 	cd rye; rye add $(PACKAGE)
 rye-version:
