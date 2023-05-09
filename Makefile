@@ -2,7 +2,7 @@ SHELL=/bin/bash -eu -o pipefail
 
 
 requirements.txt:
-	curl -sL $@ https://raw.githubusercontent.com/getsentry/sentry/f1e1642d46ee4ee3a74cbce961a3e47406a68f0b/requirements-base.txt | grep -v -- --index-url > $@
+	curl -sL $@ https://raw.githubusercontent.com/getsentry/sentry/1250d99446a0c92b0598f5335a35bf22dab66bcf/requirements-base.txt | grep -v -- --index-url > $@
 	# fix bad version string
 	sed -i 's/pyuwsgi==2.0.20.0/pyuwsgi==2.0.20/' $@
 
