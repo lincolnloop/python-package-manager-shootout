@@ -108,10 +108,10 @@ pip-tools-lock:
 pip-tools-install:
 	test -f pip-tools/.venv/bin/python || python -m venv --upgrade-deps pip-tools/.venv
 	test -f pip-tools/.venv/bin/wheel || ./pip-tools/.venv/bin/python -m pip install -U wheel
-	pip-sync --python-executable=./pip-tools/.venv/bin/python pip-tools/requirements.txt
+	pip-sync --python-executable=./pip-tools/.venv/bin/python --pip-args '--no-deps' pip-tools/requirements.txt
 pip-tools-update:
 	pip-compile --generate-hashes --resolver=backtracking --output-file=pip-tools/requirements.txt requirements.txt
-	pip-sync --python-executable=./pip-tools/.venv/bin/python pip-tools/requirements.txt
+	pip-sync --python-executable=./pip-tools/.venv/bin/python --pip-args '--no-deps' pip-tools/requirements.txt
 pip-tools-add-package:
 	echo $(PACKAGE) >> requirements.txt
 	$(MAKE) pip-tools-lock pip-tools-install
