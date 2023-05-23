@@ -11,10 +11,6 @@
           python-version: "3.10"
         if: "'${TOOL}' != 'rye'"
 
-      - name: Setup Rust
-        uses: dtolnay/rust-toolchain@stable
-        if: "'${TOOL}' == 'rye'"
-
       - name: setup
         run: ./bin/actions_prereqs.sh
 

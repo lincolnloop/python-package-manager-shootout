@@ -122,7 +122,10 @@ pip-tools-version:
 TOOLS := "$(TOOLS) rye"
 .PHONY: rye-tooling rye-import rye-clean-cache rye-clean-venv rye-clean-lock rye-lock rye-install rye-add-package rye-version
 rye-tooling:
-	cargo install --git https://github.com/mitsuhiko/rye rye
+	curl -sSf https://rye-up.com/get -o /tmp/install.sh
+	sed -i 's/self install/self install --yes/' /tmp/install.sh
+	bash /tmp/install.sh
+	source "$HOME/.rye/env"
 rye-import:
 	cd rye; rye add $$(sed -e 's/#.*//' -e '/^$$/ d' < ../requirements.txt)
 rye-clean-cache: pip-clean
