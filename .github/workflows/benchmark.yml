@@ -34,20 +34,26 @@ jobs:
           /usr/bin/time --output=timings/import.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make poetry-import
 
-      - name: lock
+      - name: lock cold
         run: |
           make poetry-clean-cache
           make poetry-clean-venv
           make poetry-clean-lock
-          /usr/bin/time --output=timings/lock.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+          /usr/bin/time --output=timings/lock-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make poetry-lock
+
+      - name: lock warm
+        run: |
+          make poetry-clean-lock
+          /usr/bin/time --output=timings/lock-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make poetry-lock
 
       - name: install cold
         run: |
-         make poetry-clean-cache
-         make poetry-clean-venv
-         /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-           make poetry-install
+          make poetry-clean-cache
+          make poetry-clean-venv
+          /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make poetry-install
 
       - name: install warm
         run: |
@@ -55,9 +61,15 @@ jobs:
           /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make poetry-install
 
-      - name: update
+      - name: update cold
         run: |
-          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+          make poetry-clean-cache
+          /usr/bin/time --output=timings/update-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make poetry-update
+
+      - name: update warm
+        run: |
+          /usr/bin/time --output=timings/update-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make poetry-update
 
       - name: add package
@@ -72,7 +84,7 @@ jobs:
           TIMESTAMP=$(date +%s)
           mkdir -p "poetry"
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
-          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
+          for stat in "tooling" "import" "lock-cold" "lock-warm" "install-cold" "install-warm" "update-cold" "update-warm" "add-package"; do
             echo "poetry,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
           csv2md "$CSV" >> $GITHUB_STEP_SUMMARY
@@ -108,20 +120,26 @@ jobs:
           /usr/bin/time --output=timings/import.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pdm-import
 
-      - name: lock
+      - name: lock cold
         run: |
           make pdm-clean-cache
           make pdm-clean-venv
           make pdm-clean-lock
-          /usr/bin/time --output=timings/lock.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+          /usr/bin/time --output=timings/lock-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pdm-lock
+
+      - name: lock warm
+        run: |
+          make pdm-clean-lock
+          /usr/bin/time --output=timings/lock-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pdm-lock
 
       - name: install cold
         run: |
-         make pdm-clean-cache
-         make pdm-clean-venv
-         /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-           make pdm-install
+          make pdm-clean-cache
+          make pdm-clean-venv
+          /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pdm-install
 
       - name: install warm
         run: |
@@ -129,9 +147,15 @@ jobs:
           /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pdm-install
 
-      - name: update
+      - name: update cold
         run: |
-          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+          make pdm-clean-cache
+          /usr/bin/time --output=timings/update-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pdm-update
+
+      - name: update warm
+        run: |
+          /usr/bin/time --output=timings/update-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pdm-update
 
       - name: add package
@@ -146,7 +170,7 @@ jobs:
           TIMESTAMP=$(date +%s)
           mkdir -p "pdm"
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
-          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
+          for stat in "tooling" "import" "lock-cold" "lock-warm" "install-cold" "install-warm" "update-cold" "update-warm" "add-package"; do
             echo "pdm,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
           csv2md "$CSV" >> $GITHUB_STEP_SUMMARY
@@ -182,20 +206,26 @@ jobs:
           /usr/bin/time --output=timings/import.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pipenv-import
 
-      - name: lock
+      - name: lock cold
         run: |
           make pipenv-clean-cache
           make pipenv-clean-venv
           make pipenv-clean-lock
-          /usr/bin/time --output=timings/lock.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+          /usr/bin/time --output=timings/lock-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pipenv-lock
+
+      - name: lock warm
+        run: |
+          make pipenv-clean-lock
+          /usr/bin/time --output=timings/lock-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pipenv-lock
 
       - name: install cold
         run: |
-         make pipenv-clean-cache
-         make pipenv-clean-venv
-         /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-           make pipenv-install
+          make pipenv-clean-cache
+          make pipenv-clean-venv
+          /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pipenv-install
 
       - name: install warm
         run: |
@@ -203,9 +233,15 @@ jobs:
           /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pipenv-install
 
-      - name: update
+      - name: update cold
         run: |
-          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+          make pipenv-clean-cache
+          /usr/bin/time --output=timings/update-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pipenv-update
+
+      - name: update warm
+        run: |
+          /usr/bin/time --output=timings/update-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pipenv-update
 
       - name: add package
@@ -220,7 +256,7 @@ jobs:
           TIMESTAMP=$(date +%s)
           mkdir -p "pipenv"
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
-          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
+          for stat in "tooling" "import" "lock-cold" "lock-warm" "install-cold" "install-warm" "update-cold" "update-warm" "add-package"; do
             echo "pipenv,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
           csv2md "$CSV" >> $GITHUB_STEP_SUMMARY
@@ -256,20 +292,26 @@ jobs:
           /usr/bin/time --output=timings/import.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pip-tools-import
 
-      - name: lock
+      - name: lock cold
         run: |
           make pip-tools-clean-cache
           make pip-tools-clean-venv
           make pip-tools-clean-lock
-          /usr/bin/time --output=timings/lock.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+          /usr/bin/time --output=timings/lock-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pip-tools-lock
+
+      - name: lock warm
+        run: |
+          make pip-tools-clean-lock
+          /usr/bin/time --output=timings/lock-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pip-tools-lock
 
       - name: install cold
         run: |
-         make pip-tools-clean-cache
-         make pip-tools-clean-venv
-         /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-           make pip-tools-install
+          make pip-tools-clean-cache
+          make pip-tools-clean-venv
+          /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pip-tools-install
 
       - name: install warm
         run: |
@@ -277,9 +319,15 @@ jobs:
           /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pip-tools-install
 
-      - name: update
+      - name: update cold
         run: |
-          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+          make pip-tools-clean-cache
+          /usr/bin/time --output=timings/update-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pip-tools-update
+
+      - name: update warm
+        run: |
+          /usr/bin/time --output=timings/update-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make pip-tools-update
 
       - name: add package
@@ -294,7 +342,7 @@ jobs:
           TIMESTAMP=$(date +%s)
           mkdir -p "pip-tools"
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
-          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
+          for stat in "tooling" "import" "lock-cold" "lock-warm" "install-cold" "install-warm" "update-cold" "update-warm" "add-package"; do
             echo "pip-tools,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
           csv2md "$CSV" >> $GITHUB_STEP_SUMMARY

@@ -16,43 +16,50 @@ def csv_to_dicts(csv_file: str) -> List[dict]:
 
 
 graphs = {
-    "lock": {"labels": [], "datasets": [{"data": []}]},
-    "update": {"labels": [], "datasets": [{"data": []}]},
-    "add-package": {"labels": [], "datasets": [{"data": []}]},
-    "tooling": {"labels": [], "datasets": [{"data": []}]},
+    "lock": {"labels": [], "datasets": []},
+    "install": {"labels": [], "datasets": []},
+    "update": {"labels": [], "datasets": []},
+    "add-package": {"labels": [], "datasets": []},
+    "tooling": {"labels": [], "datasets": []},
 }
 
 
 def convert_to_chartjs(data: List[dict]):
     """Convert a list of dicts into objects that can be used by ChartJS"""
     vals = []
-    for i in data:
 
-        if i["stat"] in graphs:
-            key = i["stat"]
-        else:
-            continue
-        vals.append(float(i["elapsed time (max)"]))
-        graphs[key]["datasets"][0]["data"].append({"id": i["tool"], "max": i["elapsed time (max)"], "min": i["elapsed time (min)"], "avg": i["elapsed time"]})
-
-    # install needs both cold & warm datapoints
-    graphs["install"] = {"labels": []}
-    warm = {"data": [], "label": "warm"}
-    cold = {"data": [], "label": "cold"}
     for i in data:
-        if i["stat"] == "install-cold":
-            cold["data"].append({"id": i["tool"], "max": i["elapsed time (max)"], "min": i["elapsed time (min)"], "avg": i["elapsed time"]})
-        elif i["stat"] == "install-warm":
-            warm["data"].append({"id": i["tool"], "max": i["elapsed time (max)"], "min": i["elapsed time (min)"], "avg": i["elapsed time"]})
-        else:
+        # Get the chart name, allowing that some have both cold and warm runs.
+        key = i["stat"]
+        split_key = key.rsplit("-", 1)
+        label = split_key[-1] if split_key[-1] in {"cold", "warm"} else None
+        key = key if label is None else split_key[0]
+        if key not in graphs:
             continue
+
+        # Find or create the dataset that this belongs to.
+        datasets = graphs[key]["datasets"]
+        try:
+            dataset = next(d for d in datasets if d.get("label") == label)
+        except StopIteration:
+            dataset = {"data": []} if label is None else {"data": [], "label": label}
+            datasets.append(dataset)
+
+        # Add data to the dataset.
+        datum = {
+            "id": i["tool"],
+            "max": i["elapsed time (max)"],
+            "min": i["elapsed time (min)"],
+            "avg": i["elapsed time"],
+        }
+        dataset["data"].append(datum)
+
         vals.append(float(i["elapsed time (max)"]))
-    graphs["install"]["datasets"] = [cold, warm]
 
     # cleanup missing data points (might be waiting for a scheduled run)
-    for graph in list(graphs.keys()):
-        if not graphs[graph]["datasets"]:
-            del graphs[graph]
+    for key in list(graphs.keys()):
+        if not graphs[key]["datasets"]:
+            del graphs[key]
 
     graphs["max"] = max(*vals)
     return graphs
