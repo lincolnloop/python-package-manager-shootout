@@ -23,20 +23,26 @@
           /usr/bin/time --output=timings/import.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make ${TOOL}-import
 
-      - name: lock
+      - name: lock cold
         run: |
           make ${TOOL}-clean-cache
           make ${TOOL}-clean-venv
           make ${TOOL}-clean-lock
-          /usr/bin/time --output=timings/lock.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+          /usr/bin/time --output=timings/lock-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make ${TOOL}-lock
+
+      - name: lock warm
+        run: |
+          make ${TOOL}-clean-lock
+          /usr/bin/time --output=timings/lock-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make ${TOOL}-lock
 
       - name: install cold
         run: |
-         make ${TOOL}-clean-cache
-         make ${TOOL}-clean-venv
-         /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-           make ${TOOL}-install
+          make ${TOOL}-clean-cache
+          make ${TOOL}-clean-venv
+          /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make ${TOOL}-install
 
       - name: install warm
         run: |
@@ -44,9 +50,15 @@
           /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make ${TOOL}-install
 
-      - name: update
+      - name: update cold
         run: |
-          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+          make ${TOOL}-clean-cache
+          /usr/bin/time --output=timings/update-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make ${TOOL}-update
+
+      - name: update warm
+        run: |
+          /usr/bin/time --output=timings/update-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make ${TOOL}-update
 
       - name: add package
@@ -61,7 +73,7 @@
           TIMESTAMP=$(date +%s)
           mkdir -p "$TOOL"
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
-          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
+          for stat in "tooling" "import" "lock-cold" "lock-warm" "install-cold" "install-warm" "update-cold" "update-warm" "add-package"; do
             echo "${TOOL},$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
           csv2md "$CSV" >> $GITHUB_STEP_SUMMARY
