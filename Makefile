@@ -118,6 +118,33 @@ pip-tools-add-package:
 pip-tools-version:
 	@pip-compile --version | awk '{print $$3}'
 
+TOOLS := "$(TOOLS) uv"
+.PHONY: uv-tooling uv-import uv-clean-cache uv-clean-venv uv-clean-lock uv-lock uv-install uv-add-package uv-version
+uv-tooling:
+	pip install --user uv
+uv-import:
+	cat requirements.txt
+uv-clean-cache:
+	uv clean --verbose
+uv-clean-venv:
+	rm -rf uv/.venv
+uv-clean-lock:
+	rm -f uv/requirements.txt
+uv-lock:
+	mkdir -p uv
+	uv pip compile --output-file=uv/requirements.txt requirements.txt
+uv-install:
+	test -f uv/.venv/bin/python || uv venv uv/.venv
+	VIRTUAL_ENV=$$(pwd)/uv/.venv uv pip sync uv/requirements.txt
+uv-update:
+	uv pip compile --output-file=uv/requirements.txt requirements.txt
+	VIRTUAL_ENV=$$(pwd)/uv/.venv uv pip sync uv/requirements.txt
+uv-add-package:
+	echo $(PACKAGE) >> requirements.txt
+	$(MAKE) uv-lock uv-install
+uv-version:
+	@uv --version | awk '{print $$2}'
+
 .PHONY: tools
 tools:
 	@echo $(TOOLS)

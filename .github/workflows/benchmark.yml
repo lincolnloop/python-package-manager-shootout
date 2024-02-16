@@ -306,9 +306,83 @@ jobs:
           path: pip-tools/stats.csv
           retention-days: 10
 
+  uv:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.10"
+
+      - name: setup
+        run: ./bin/actions_prereqs.sh
+
+      - name: tooling
+        run: |
+          /usr/bin/time --output=timings/tooling.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make uv-tooling
+
+      - name: import
+        run: |
+          /usr/bin/time --output=timings/import.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make uv-import
+
+      - name: lock
+        run: |
+          make uv-clean-cache
+          make uv-clean-venv
+          make uv-clean-lock
+          /usr/bin/time --output=timings/lock.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make uv-lock
+
+      - name: install cold
+        run: |
+         make uv-clean-cache
+         make uv-clean-venv
+         /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+           make uv-install
+
+      - name: install warm
+        run: |
+          make uv-clean-venv
+          /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make uv-install
+
+      - name: update
+        run: |
+          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make uv-update
+
+      - name: add package
+        run: |
+          /usr/bin/time --output=timings/add-package.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make uv-add-package
+
+      - name: stats
+        run: |
+          VERSION=$(make uv-version)
+          CSV=uv/stats.csv
+          TIMESTAMP=$(date +%s)
+          mkdir -p "uv"
+          echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
+          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
+            echo "uv,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
+          done
+          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
+
+      - uses: actions/upload-artifact@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          name: uv-stats
+          path: uv/stats.csv
+          retention-days: 10
+
   gather:
     runs-on: ubuntu-22.04
-    needs: [poetry, pdm, pipenv, pip-tools]
+    needs: [poetry, pdm, pipenv, pip-tools, uv]
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/download-artifact@v3
