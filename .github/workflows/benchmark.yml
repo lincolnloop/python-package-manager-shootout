@@ -378,20 +378,26 @@ jobs:
           /usr/bin/time --output=timings/import.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make uv-import
 
-      - name: lock
+      - name: lock cold
         run: |
           make uv-clean-cache
           make uv-clean-venv
           make uv-clean-lock
-          /usr/bin/time --output=timings/lock.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+          /usr/bin/time --output=timings/lock-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make uv-lock
+
+      - name: lock warm
+        run: |
+          make uv-clean-lock
+          /usr/bin/time --output=timings/lock-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make uv-lock
 
       - name: install cold
         run: |
-         make uv-clean-cache
-         make uv-clean-venv
-         /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-           make uv-install
+          make uv-clean-cache
+          make uv-clean-venv
+          /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make uv-install
 
       - name: install warm
         run: |
@@ -399,9 +405,15 @@ jobs:
           /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make uv-install
 
-      - name: update
+      - name: update cold
         run: |
-          /usr/bin/time --output=timings/update.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+          make uv-clean-cache
+          /usr/bin/time --output=timings/update-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make uv-update
+
+      - name: update warm
+        run: |
+          /usr/bin/time --output=timings/update-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
             make uv-update
 
       - name: add package
@@ -416,7 +428,7 @@ jobs:
           TIMESTAMP=$(date +%s)
           mkdir -p "uv"
           echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
-          for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
+          for stat in "tooling" "import" "lock-cold" "lock-warm" "install-cold" "install-warm" "update-cold" "update-warm" "add-package"; do
             echo "uv,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
           csv2md "$CSV" >> $GITHUB_STEP_SUMMARY
