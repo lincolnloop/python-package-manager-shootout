@@ -110,7 +110,7 @@ for (const graph in data) {
     data[graph].datasets[0].backgroundColor.push(colors[i]);
     data[graph].datasets[0].borderColor.push(newShade(colors[i], -50));
   });
-  if (graph === "install") {
+  if (data[graph].datasets.length > 1) {
     data[graph].datasets[1].backgroundColor = [];
     data[graph].datasets[1].borderColor = [];
     data[graph].datasets[1].data.forEach(function (dataset, i) {
