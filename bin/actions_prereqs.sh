@@ -5,6 +5,6 @@ set -euf -o pipefail
 sudo apt-get update -qq
 sudo apt-get install -y libxmlsec1-dev librdkafka-dev
 # benchmark setup
-pip --disable-pip-version-check --no-cache-dir install mdtable
+pip --disable-pip-version-check --no-cache-dir install csv2md
 mkdir -p timings
 make requirements.txt

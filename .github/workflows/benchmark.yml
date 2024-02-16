@@ -75,7 +75,7 @@ jobs:
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "poetry,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
-          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
+          csv2md "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/main'
@@ -149,7 +149,7 @@ jobs:
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "pdm,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
-          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
+          csv2md "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/main'
@@ -223,7 +223,7 @@ jobs:
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "pipenv,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
-          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
+          csv2md "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/main'
@@ -297,7 +297,7 @@ jobs:
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "pip-tools,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
-          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
+          csv2md "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/main'
@@ -371,7 +371,7 @@ jobs:
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "uv,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
-          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
+          csv2md "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/main'

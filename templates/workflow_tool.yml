@@ -64,7 +64,7 @@
           for stat in "tooling" "import" "lock" "install-cold" "install-warm" "update" "add-package"; do
             echo "${TOOL},$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
           done
-          mdtable "$CSV" >> $GITHUB_STEP_SUMMARY
+          csv2md "$CSV" >> $GITHUB_STEP_SUMMARY
 
       - uses: actions/upload-artifact@v4
         if: github.ref == 'refs/heads/main'

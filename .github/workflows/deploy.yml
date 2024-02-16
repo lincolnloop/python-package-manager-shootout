@@ -35,12 +35,12 @@ jobs:
           key: ${{ runner.os }}-playwright
       - name: prereqs
         run: |
-          pip install --disable-pip-version-check sqlite-utils mdtable shot-scraper
+          pip install --disable-pip-version-check sqlite-utils csv2md shot-scraper
           shot-scraper install
       - name: average stats
         run: |
           ./bin/generate_average_stats.sh
-          mdtable stats.csv >> $GITHUB_STEP_SUMMARY
+          csv2md stats.csv >> $GITHUB_STEP_SUMMARY
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup Node
