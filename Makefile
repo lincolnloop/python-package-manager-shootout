@@ -125,7 +125,7 @@ uv-tooling:
 uv-import:
 	cat requirements.txt
 uv-clean-cache:
-	uv clean --verbose
+	rm -rf ~/.cache/uv
 uv-clean-venv:
 	rm -rf uv/.venv
 uv-clean-lock:
