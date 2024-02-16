@@ -132,7 +132,7 @@ uv-clean-lock:
 	rm -f uv/requirements.txt
 uv-lock:
 	mkdir -p uv
-	uv pip compile --output-file=uv/requirements.txt requirements.txt
+	uv pip compile --generate-hashes --output-file=uv/requirements.txt requirements.txt
 uv-install:
 	test -f uv/.venv/bin/python || uv venv uv/.venv
 	VIRTUAL_ENV=$$(pwd)/uv/.venv uv pip sync uv/requirements.txt
