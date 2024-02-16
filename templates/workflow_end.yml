@@ -4,7 +4,7 @@
     needs: [${TOOLS}]
     if: github.ref == 'refs/heads/main'
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
       - name: build stats.csv
         run: |
           # join and remove duplicate headers
@@ -12,7 +12,7 @@
           HEADER=$(head -n 1 raw.csv)
           echo "$HEADER" > stats.csv
           grep -v "$HEADER" raw.csv >> stats.csv
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: stats
           path: stats.csv
