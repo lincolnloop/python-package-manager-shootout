@@ -21,12 +21,13 @@ TOOLS := poetry
 .PHONY: poetry-tooling poetry-import poetry-clean-cache poetry-clean-venv poetry-clean-lock poetry-lock poetry-install poetry-add-package poetry-version
 poetry-tooling:
 	curl -sSL https://install.python-poetry.org | python3 -
+	poetry config virtualenvs.in-project true
 poetry-import:
 	cd poetry; poetry add $$(sed -e 's/#.*//' -e '/^$$/ d' < ../requirements.txt)
 poetry-clean-cache: pip-clean
 	rm -rf ~/.cache/pypoetry
 poetry-clean-venv:
-	cd poetry; poetry env remove python || true
+	cd poetry; poetry env remove --all || true
 poetry-clean-lock:
 	rm -f poetry/poetry.lock
 poetry-lock:
