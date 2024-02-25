@@ -26,8 +26,6 @@ graphs = {
 
 def convert_to_chartjs(data: List[dict]):
     """Convert a list of dicts into objects that can be used by ChartJS"""
-    vals = []
-
     for i in data:
         # Get the chart name, allowing that some have both cold and warm runs.
         key = i["stat"]
@@ -54,14 +52,11 @@ def convert_to_chartjs(data: List[dict]):
         }
         dataset["data"].append(datum)
 
-        vals.append(float(i["elapsed time (max)"]))
-
     # cleanup missing data points (might be waiting for a scheduled run)
     for key in list(graphs.keys()):
         if not graphs[key]["datasets"]:
             del graphs[key]
 
-    graphs["max"] = max(*vals)
     return graphs
 
 
