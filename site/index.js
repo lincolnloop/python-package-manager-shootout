@@ -63,9 +63,7 @@ function indexToMid(index, datasetCount, datasetIndex) {
   return index;
 }
 
-const max = Math.ceil(data.max) + 10;
 const stdevLineColor = "#888888";
-delete data.max;
 for (const graph in data) {
   const ctx = document.getElementById(`${graph}-chart`).getContext("2d");
   const options = {
@@ -84,7 +82,6 @@ for (const graph in data) {
       y: {
         beginAtZero: true,
         min: 0,
-        suggestedMax: max,
         title: { text: "seconds", display: true },
       },
     },
