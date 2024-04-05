@@ -20,7 +20,7 @@ pip-clean:
 TOOLS := poetry
 .PHONY: poetry-tooling poetry-import poetry-clean-cache poetry-clean-venv poetry-clean-lock poetry-lock poetry-install poetry-add-package poetry-version
 poetry-tooling:
-	curl -sSL https://install.python-poetry.org | python3 -
+	pipx install poetry
 	poetry config virtualenvs.in-project true
 poetry-import:
 	cd poetry; poetry add $$(sed -e 's/#.*//' -e '/^$$/ d' < ../requirements.txt)
