@@ -50,7 +50,7 @@ pdm-import:
 pdm-clean-cache: pip-clean
 	rm -rf ~/.cache/pdm
 pdm-clean-venv:
-	rm -rf pdm/__pypackages__
+	rm -rf pdm/.venv pdm/__pypackages__
 	mkdir -p pdm/__pypackages__
 pdm-clean-lock:
 	rm -f pdm/pdm.lock
