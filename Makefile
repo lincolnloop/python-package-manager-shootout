@@ -122,25 +122,21 @@ TOOLS := "$(TOOLS) uv"
 uv-tooling:
 	pip install --user uv
 uv-import:
-	cat requirements.txt
+	cd uv; mkdir -p app; touch app/__init__.py; uv add --frozen -r ../requirements.txt
 uv-clean-cache:
 	rm -rf ~/.cache/uv
 uv-clean-venv:
 	rm -rf uv/.venv
 uv-clean-lock:
-	rm -f uv/requirements.txt
+	rm -f uv/uv.lock
 uv-lock:
-	mkdir -p uv
-	uv pip compile --generate-hashes --output-file=uv/requirements.txt requirements.txt
+	cd uv; uv lock
 uv-install:
-	test -f uv/.venv/bin/python || uv venv uv/.venv
-	VIRTUAL_ENV=$$(pwd)/uv/.venv uv pip sync uv/requirements.txt
+	cd uv; uv sync
 uv-update:
-	uv pip compile --output-file=uv/requirements.txt requirements.txt
-	VIRTUAL_ENV=$$(pwd)/uv/.venv uv pip sync uv/requirements.txt
+	cd uv; uv lock -U
 uv-add-package:
-	echo $(PACKAGE) >> requirements.txt
-	$(MAKE) uv-lock uv-install
+	cd uv; uv add $(PACKAGE)
 uv-version:
 	@uv --version | awk '{print $$2}'
 
