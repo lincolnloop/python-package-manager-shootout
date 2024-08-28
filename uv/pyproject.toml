@@ -9,9 +9,5 @@ dependencies = []
 requires-python = ">=3.11"
 license = {text = "MIT"}
 
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
-
 [tool.uv]
 python-preference = "only-system"

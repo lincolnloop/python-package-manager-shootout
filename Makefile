@@ -122,7 +122,7 @@ TOOLS := "$(TOOLS) uv"
 uv-tooling:
 	pip install --user uv
 uv-import:
-	cd uv; mkdir -p app; touch app/__init__.py; uv add --frozen -r ../requirements.txt
+	cd uv; uv add --frozen -r ../requirements.txt
 uv-clean-cache:
 	rm -rf ~/.cache/uv
 uv-clean-venv:
