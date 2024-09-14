@@ -134,7 +134,7 @@ uv-lock:
 uv-install:
 	cd uv; uv sync
 uv-update:
-	cd uv; uv lock --upgrade
+	cd uv; uv sync --upgrade
 uv-add-package:
 	cd uv; uv add $(PACKAGE)
 uv-version:
