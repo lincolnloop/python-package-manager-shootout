@@ -9,6 +9,8 @@ on:
     workflows: [benchmark]
     branches: [main]
     types: [completed]
+  # manual trigger
+  workflow_dispatch:
 jobs:
   deploy:
     runs-on: ubuntu-22.04
