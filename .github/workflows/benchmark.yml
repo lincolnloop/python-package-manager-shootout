@@ -530,7 +530,7 @@ jobs:
 
   gather:
     runs-on: ubuntu-22.04
-    needs: [poetry, pdm, pipenv, pip-tools, uv]
+    needs: [poetry, pdm, pdm-uv, pipenv, pip-tools, uv]
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/download-artifact@v4
