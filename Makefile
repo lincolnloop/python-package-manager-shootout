@@ -90,7 +90,7 @@ pdm-uv-update:
 pdm-uv-add-package:
 	cd pdm-uv; pdm add $(PACKAGE)
 pdm-uv-version:
-	@echo "PDM ${pdm --version | awk '{print $$3}'} - UV ${uv --version | awk '{print $$2}}"
+	@echo "pdm$$(pdm --version | awk '{print $$3}')-uv$$(uv --version | awk '{print $$2}')"
 
 TOOLS := "$(TOOLS) pipenv"
 .PHONY: pipenv-tooling pipenv-import pipenv-clean-cache pipenv-clean-venv pipenv-clean-lock pipenv-lock pipenv-install pipenv-add-package pipenv-version
