@@ -65,6 +65,32 @@ pdm-add-package:
 pdm-version:
 	@pdm --version | awk '{print $$3}'
 
+TOOLS := "$(TOOLS) pdm-uv"
+.PHONY: pdm-uv-tooling pdm-uv-import pdm-uv-clean-cache pdm-uv-clean-venv pdm-uv-clean-lock pdm-uv-lock pdm-uv-install pdm-uv-add-package pdm-uv-version
+pdm-uv-tooling:
+	pipx install pdm
+	pipx install uv
+	pdm config use_uv true
+	pdm config python.use_venv True
+pdm-uv-import:
+	cd pdm-uv; pdm import -f requirements ../requirements.txt
+pdm-uv-clean-cache: pip-clean
+	rm -rf ~/.cache/pdm
+	rm -rf ~/.cache/uv
+pdm-uv-clean-venv:
+	rm -rf pdm/.venv pdm/__pypackages__
+pdm-uv-clean-lock:
+	rm -f pdm/pdm.lock
+pdm-uv-lock:
+	cd pdm-uv; pdm lock
+pdm-uv-install:
+	cd pdm-uv; pdm install
+pdm-uv-update:
+	cd pdm-uv; pdm update
+pdm-uv-add-package:
+	cd pdm-uv; pdm add $(PACKAGE)
+pdm-uv-version:
+	@echo "pdm$$(pdm --version | awk '{print $$3}')-uv$$(uv --version | awk '{print $$2}')"
 
 TOOLS := "$(TOOLS) pipenv"
 .PHONY: pipenv-tooling pipenv-import pipenv-clean-cache pipenv-clean-venv pipenv-clean-lock pipenv-lock pipenv-install pipenv-add-package pipenv-version
