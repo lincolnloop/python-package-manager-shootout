@@ -119,7 +119,7 @@ pipenv-version:
 TOOLS := "$(TOOLS) pip-tools"
 .PHONY: pip-tools-tooling pip-tools-import pip-tools-clean-cache pip-tools-clean-venv pip-tools-clean-lock pip-tools-lock pip-tools-install pip-tools-add-package pip-tools-version
 pip-tools-tooling:
-	pip install --user pip-tools
+	pip install --user pip-tools 'pip<25.1'
 pip-tools-import:
 	cat requirements.txt
 pip-tools-clean-cache: pip-clean
