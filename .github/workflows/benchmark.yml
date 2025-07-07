@@ -270,91 +270,91 @@ jobs:
           path: pdm-uv/stats.csv
           retention-days: 10
 
-#  pipenv:
-#    runs-on: ubuntu-22.04
-#    steps:
-#      - name: Checkout
-#        uses: actions/checkout@v4
-#
-#      - name: Setup Python
-#        uses: actions/setup-python@v5
-#        with:
-#          python-version: "3.11"
-#
-#      - name: setup
-#        run: ./bin/actions_prereqs.sh
-#
-#      - name: tooling
-#        run: |
-#          /usr/bin/time --output=timings/tooling.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-#            make pipenv-tooling
-#
-#      - name: import
-#        run: |
-#          /usr/bin/time --output=timings/import.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-#            make pipenv-import
-#
-#      - name: lock cold
-#        run: |
-#          make pipenv-clean-cache
-#          make pipenv-clean-venv
-#          make pipenv-clean-lock
-#          /usr/bin/time --output=timings/lock-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-#            make pipenv-lock
-#
-#      - name: lock warm
-#        run: |
-#          make pipenv-clean-lock
-#          /usr/bin/time --output=timings/lock-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-#            make pipenv-lock
-#
-#      - name: install cold
-#        run: |
-#          make pipenv-clean-cache
-#          make pipenv-clean-venv
-#          /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-#            make pipenv-install
-#
-#      - name: install warm
-#        run: |
-#          make pipenv-clean-venv
-#          /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-#            make pipenv-install
-#
-#      - name: update cold
-#        run: |
-#          make pipenv-clean-cache
-#          /usr/bin/time --output=timings/update-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-#            make pipenv-update
-#
-#      - name: update warm
-#        run: |
-#          /usr/bin/time --output=timings/update-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-#            make pipenv-update
-#
-#      - name: add package
-#        run: |
-#          /usr/bin/time --output=timings/add-package.txt --format="%e,%S,%U,%P,%M,%I,%O" \
-#            make pipenv-add-package
-#
-#      - name: stats
-#        run: |
-#          VERSION=$(make pipenv-version)
-#          CSV=pipenv/stats.csv
-#          TIMESTAMP=$(date +%s)
-#          mkdir -p "pipenv"
-#          echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
-#          for stat in "tooling" "import" "lock-cold" "lock-warm" "install-cold" "install-warm" "update-cold" "update-warm" "add-package"; do
-#            echo "pipenv,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
-#          done
-#          csv2md "$CSV" >> $GITHUB_STEP_SUMMARY
-#
-#      - uses: actions/upload-artifact@v4
-#        if: github.ref == 'refs/heads/main'
-#        with:
-#          name: pipenv-stats
-#          path: pipenv/stats.csv
-#          retention-days: 10
+  pipenv:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: setup
+        run: ./bin/actions_prereqs.sh
+
+      - name: tooling
+        run: |
+          /usr/bin/time --output=timings/tooling.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pipenv-tooling
+
+      - name: import
+        run: |
+          /usr/bin/time --output=timings/import.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pipenv-import
+
+      - name: lock cold
+        run: |
+          make pipenv-clean-cache
+          make pipenv-clean-venv
+          make pipenv-clean-lock
+          /usr/bin/time --output=timings/lock-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pipenv-lock
+
+      - name: lock warm
+        run: |
+          make pipenv-clean-lock
+          /usr/bin/time --output=timings/lock-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pipenv-lock
+
+      - name: install cold
+        run: |
+          make pipenv-clean-cache
+          make pipenv-clean-venv
+          /usr/bin/time --output=timings/install-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pipenv-install
+
+      - name: install warm
+        run: |
+          make pipenv-clean-venv
+          /usr/bin/time --output=timings/install-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pipenv-install
+
+      - name: update cold
+        run: |
+          make pipenv-clean-cache
+          /usr/bin/time --output=timings/update-cold.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pipenv-update
+
+      - name: update warm
+        run: |
+          /usr/bin/time --output=timings/update-warm.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pipenv-update
+
+      - name: add package
+        run: |
+          /usr/bin/time --output=timings/add-package.txt --format="%e,%S,%U,%P,%M,%I,%O" \
+            make pipenv-add-package
+
+      - name: stats
+        run: |
+          VERSION=$(make pipenv-version)
+          CSV=pipenv/stats.csv
+          TIMESTAMP=$(date +%s)
+          mkdir -p "pipenv"
+          echo "tool,version,timestamp,stat,elapsed time,system,user,cpu percent,max rss,inputs,outputs" > "$CSV"
+          for stat in "tooling" "import" "lock-cold" "lock-warm" "install-cold" "install-warm" "update-cold" "update-warm" "add-package"; do
+            echo "pipenv,$VERSION,$TIMESTAMP,$stat,$(cat timings/$stat.txt | tr -d '%')" >> "$CSV"
+          done
+          csv2md "$CSV" >> $GITHUB_STEP_SUMMARY
+
+      - uses: actions/upload-artifact@v4
+        if: github.ref == 'refs/heads/main'
+        with:
+          name: pipenv-stats
+          path: pipenv/stats.csv
+          retention-days: 10
 
   pip-tools:
     runs-on: ubuntu-22.04
@@ -530,8 +530,7 @@ jobs:
 
   gather:
     runs-on: ubuntu-22.04
-#    needs: [poetry, pdm, pdm-uv, pipenv, pip-tools, uv]
-    needs: [poetry, pdm, pdm-uv, pip-tools, uv]
+    needs: [poetry, pdm, pdm-uv, pipenv, pip-tools, uv]
     if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/download-artifact@v4
