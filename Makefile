@@ -166,6 +166,29 @@ uv-add-package:
 uv-version:
 	@uv --version | awk '{print $$2}'
 
+TOOLS := "$(TOOLS) pixi"
+.PHONY: pixi-tooling pixi-import pixi-clean-cache pixi-clean-venv pixi-clean-lock pixi-lock pixi-install pixi-update pixi-add-package pixi-version
+pixi-tooling:
+	curl -fsSL https://pixi.sh/install.sh | sh
+pixi-import:
+	cd pixi; pixi add --pypi $$(sed -e 's/#.*//' -e '/^$$/ d' < ../requirements.txt) --frozen
+pixi-clean-cache: pip-clean
+	pixi clean cache --yes
+pixi-clean-venv:
+	cd pixi; rm -rf .pixi/envs
+pixi-clean-lock:
+	cd pixi; rm -f pixi.lock
+pixi-lock:
+	cd pixi; pixi lock
+pixi-install:
+	cd pixi; pixi install
+pixi-update:
+	cd pixi; pixi upgrade
+pixi-add-package:
+	cd pixi; pixi add --pypi $(PACKAGE)
+pixi-version:
+	@pixi --version | awk '{print $$2}'
+
 .PHONY: tools
 tools:
 	@echo $(TOOLS)
