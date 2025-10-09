@@ -1,0 +1,9 @@
+[project]
+dependencies = []
+name = "pixi"
+requires-python = "~= 3.11.0"
+version = "0.1.0"
+
+[tool.pixi.workspace]
+channels = ["conda-forge"]
+platforms = ["linux-64"]
