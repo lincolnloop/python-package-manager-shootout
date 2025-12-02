@@ -12,3 +12,7 @@ license = {text = "MIT"}
 [build-system]
 requires = ["pdm-pep517>=1.0.0"]
 build-backend = "pdm.pep517.api"
+
+# https://github.com/pdm-project/pdm/issues/3667
+[tool.pdm.resolution.overrides]
+grpcio-status = "<1.72"
