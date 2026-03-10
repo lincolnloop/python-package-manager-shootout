@@ -175,6 +175,7 @@ pixi-import:
 	cd pixi; $(PIXI_PATH) add --pypi $$(sed -e 's/#.*//' -e '/^$$/ d' < ../requirements.txt) --frozen
 pixi-clean-cache: pip-clean
 	$(PIXI_PATH) clean cache --yes
+	rm -rf ~/.cache/uv
 pixi-clean-venv:
 	cd pixi; rm -rf .pixi/envs
 pixi-clean-lock:
