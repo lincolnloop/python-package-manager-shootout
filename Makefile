@@ -20,7 +20,7 @@ pip-clean:
 TOOLS := poetry
 .PHONY: poetry-tooling poetry-import poetry-clean-cache poetry-clean-venv poetry-clean-lock poetry-lock poetry-install poetry-add-package poetry-version
 poetry-tooling:
-	pipx install poetry
+	pipx install --python python poetry
 	poetry config virtualenvs.in-project true
 poetry-import:
 	cd poetry; poetry add $$(sed -e 's/#.*//' -e '/^$$/ d' < ../requirements.txt)
@@ -44,7 +44,7 @@ poetry-version:
 TOOLS := "$(TOOLS) pdm"
 .PHONY: pdm-tooling pdm-import pdm-clean-cache pdm-clean-venv pdm-clean-lock pdm-lock pdm-install pdm-add-package pdm-version
 pdm-tooling:
-	curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python3 -
+	curl -sSL https://raw.githubusercontent.com/pdm-project/pdm/main/install-pdm.py | python -
 pdm-import:
 	cd pdm; pdm import -f requirements ../requirements.txt
 pdm-clean-cache: pip-clean
@@ -68,8 +68,8 @@ pdm-version:
 TOOLS := "$(TOOLS) pdm-uv"
 .PHONY: pdm-uv-tooling pdm-uv-import pdm-uv-clean-cache pdm-uv-clean-venv pdm-uv-clean-lock pdm-uv-lock pdm-uv-install pdm-uv-add-package pdm-uv-version
 pdm-uv-tooling:
-	pipx install pdm
-	pipx install uv
+	pipx install --python python pdm
+	pipx install --python python uv
 	pdm config use_uv true
 	pdm config python.use_venv True
 pdm-uv-import:
