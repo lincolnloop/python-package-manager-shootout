@@ -7,13 +7,14 @@ on:
     branches:
       - benchmark/*
   schedule:
-    - cron: '50 */6 * * *'
+    - cron: '50 1 * * *'
   # manual trigger
   workflow_dispatch:
 jobs:
 
   poetry:
     runs-on: ubuntu-22.04
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -100,6 +101,7 @@ jobs:
 
   pdm:
     runs-on: ubuntu-22.04
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -186,6 +188,7 @@ jobs:
 
   pdm-uv:
     runs-on: ubuntu-22.04
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -272,6 +275,7 @@ jobs:
 
   pipenv:
     runs-on: ubuntu-22.04
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -358,6 +362,7 @@ jobs:
 
   pip-tools:
     runs-on: ubuntu-22.04
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -444,6 +449,7 @@ jobs:
 
   uv:
     runs-on: ubuntu-22.04
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -530,6 +536,7 @@ jobs:
 
   pixi:
     runs-on: ubuntu-22.04
+    timeout-minutes: 30
     steps:
       - name: Checkout
         uses: actions/checkout@v4

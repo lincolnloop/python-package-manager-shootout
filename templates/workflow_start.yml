@@ -5,5 +5,7 @@ on:
     branches:
       - benchmark/*
   schedule:
-    - cron: '50 */6 * * *'
+    - cron: '50 1 * * *'
+  # manual trigger
+  workflow_dispatch:
 jobs:
