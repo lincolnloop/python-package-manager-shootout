@@ -3,6 +3,10 @@ SHELL=/bin/bash -eu -o pipefail
 
 requirements.txt:
 	curl -sL $@ https://raw.githubusercontent.com/getsentry/sentry/51281a6abd8ff4a93d2cebc04e1d5fc7aa9c4c11/requirements-base.txt | grep -v -- --index-url > $@
+	# sentry-protos pins protobuf<6 while google-cloud-* releases since
+	# 2026-06-25 require protobuf>=6.33.5; without an explicit bound the
+	# backtracking resolvers (pip, pdm) churn for ~90 minutes per lock.
+	echo "protobuf<6" >> $@
 
 .github/workflows/benchmark.yml: Makefile bin/build_workflow.sh templates/workflow_start.yml templates/workflow_tool.yml templates/workflow_end.yml
 	./bin/build_workflow.sh > $@
